@@ -1,103 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diatomic CO Visualization</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <!-- Plotly.js -->
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <script type="module" src="src/main.js" defer></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ayush Docs | System Log</title>
+    <meta name="description"
+        content="Technical notes and computational models exploring physics, software systems, and correctness. Maintained by Ayush." />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ayush Docs | System Log" />
+    <meta property="og:description" content="Interactive models and technical notes on physics and systems." />
+    <meta property="og:type" content="website" />
 </head>
 
 <body>
-    <div id="app">
-        <!-- Visualization Area (Left) -->
-        <main class="viz-area">
-            <div id="molecule-container"></div>
-            <!-- Overlay preserved if needed, but sidebar has info now. Let's remove overlay to clean up view. -->
-        </main>
-
-        <!-- Sidebar (Right) -->
-        <aside class="sidebar">
-            <div>
-                <h1>Diatomic CO</h1>
-                <p class="subtitle">Rigid Rotor • Harmonic Oscillator</p>
-            </div>
-
-            <!-- Rigid Rotor Card -->
-            <div class="card-compact">
-                <h3>Rigid Rotor (Rotation)</h3>
-                <div class="equation-mini">E = B · l(l+1)</div>
-                <div class="stat-row">
-                    <span>l: <span id="math-l">0</span></span>
-                    <span>E: <span id="energy-l">0.00</span></span>
-                </div>
-                <div class="stat-row">
-                    <span>ω: <span id="math-omegaRot">0.00</span></span>
-                </div>
-
-                <div class="btn-group-mini">
-                    <button class="btn-mini" id="btn-emit-l">Emit (l-1)</button>
-                    <button class="btn-mini" id="btn-absorb-l">Absorb (l+1)</button>
-                </div>
-            </div>
-
-            <!-- Harmonic Oscillator Card -->
-            <div class="card-compact">
-                <h3>Harmonic Oscillator (Vibration)</h3>
-                <div class="equation-mini">E = (v+½)ℏω</div>
-                <div class="stat-row">
-                    <span>v: <span id="val-v">0</span></span>
-                    <span>E: <span id="energy-v">0.00</span></span>
-                </div>
-                <div class="stat-row">
-                    <span>r: <span id="math-r">3.00</span> au</span>
-                    <span>k: <span id="math-k">1.0</span></span>
-                </div>
-
-                <div class="btn-group-mini">
-                    <button class="btn-mini" id="btn-emit-v">Emit (v-1)</button>
-                    <button class="btn-mini" id="btn-absorb-v">Absorb (v+1)</button>
-                </div>
-
-                <div class="control-mini">
-                    <label>Bond Stiffness (k):</label>
-                    <input type="range" id="slider-k" min="0.5" max="3.0" step="0.1" value="1.0">
-                </div>
-            </div>
-
-            <!-- Electronic Card -->
-            <div class="card-compact">
-                <h3>Electronic State</h3>
-                <div class="equation-mini">H ≈ T + V_eff(x)</div>
-                <div class="stat-row">
-                    <span>State (n): <span id="math-n">0</span></span>
-                </div>
-                <div class="stat-row">
-                    <span>Total E: <span id="math-Etotal">0.00</span></span>
-                </div>
-
-                <div class="control-mini">
-                    <label>Select State:</label>
-                    <select id="select-elec"
-                        style="width:100%; margin-top:5px; background:#333; color:#fff; border:1px solid #555;">
-                        <option value="0">Ground (n=0)</option>
-                        <option value="1">Excited (n=1)</option>
-                        <option value="2">Excited (n=2)</option>
-                    </select>
-                </div>
-            </div>
-
-            <p style="font-size:0.7rem; color:#666; text-align:center; margin-top:auto;">
-                Simplified Model. BO approx.
-            </p>
-        </aside>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>

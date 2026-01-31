@@ -1,0 +1,85 @@
+:root {
+  --bg-color: #ffffff;             /* 70% White */
+  --card-bg: #f4f1ea;              /* 20% Beige */
+  --text-color: #2c2c2c;           /* Dark text for contrast */
+  --text-secondary: #5d5d5d;       /* Muted text */
+  --accent-color: #b8860b;         /* 10% Gold */
+  --accent-hover: #daa520;
+  --border-color: #e3ddcf;
+  --font-main: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Scrollbar - Hidden by default (Global) */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Explicit scrollbar for specific containers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-color); 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #dcd6c8; 
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color); 
+}
+
+/* Text Selection */
+::selection {
+  background: var(--accent-color);
+  color: #fff;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn:hover {
+  background: var(--accent-color);
+  color: #000;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  color: #fff;
+}
