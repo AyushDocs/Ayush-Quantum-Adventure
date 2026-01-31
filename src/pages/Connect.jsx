@@ -2,8 +2,10 @@ import emailjs from '@emailjs/browser';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AlertCircle, CheckCircle2, Mail, MessageSquare, Send, Terminal, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 export default function Connect() {
+    const { width } = useWindowSize();
     const [status, setStatus] = useState("idle"); // idle, sending, success, error
     const [errorMessage, setErrorMessage] = useState("");
     const formRef = useRef();
@@ -50,15 +52,15 @@ export default function Connect() {
     return (
         <motion.div 
             className="container" 
-            style={{ maxWidth: '1000px', marginTop: '5rem' }}
+            style={{ maxWidth: '1000px', marginTop: width < 768 ? '2rem' : '5rem' }}
             initial="hidden"
             animate="visible"
             variants={containerVariants}
         >
             <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'minmax(300px, 1fr) 2fr', 
-                gap: '4rem',
+                gridTemplateColumns: width < 768 ? '1fr' : 'minmax(300px, 1fr) 2fr', 
+                gap: width < 768 ? '2rem' : '4rem',
                 borderTop: '1px solid var(--border-color)',
                 paddingTop: '2rem'
             }}>
@@ -77,7 +79,7 @@ export default function Connect() {
                         <span>usr/bin/transmit</span>
                     </div>
                     <h1 style={{ 
-                        fontSize: '3.5rem', 
+                        fontSize: width < 768 ? '2.5rem' : '3.5rem', 
                         fontWeight: '700', 
                         lineHeight: '1',
                         margin: '0 0 1.5rem 0',
@@ -104,7 +106,7 @@ export default function Connect() {
                             <span>ayush@example.com</span>
                         </p>
                         <p style={{ opacity: 0.6, fontSize: '0.8rem', fontStyle: 'italic' }}>
-                            Note: Requires Formspree ID configuration for active transmission.
+                            Note: Requires EmailJS configuration for active transmission.
                         </p>
                     </div>
                 </motion.div>
@@ -118,14 +120,14 @@ export default function Connect() {
                             display: 'flex', 
                             flexDirection: 'column', 
                             gap: '1.5rem',
-                            padding: '2rem',
+                            padding: width < 768 ? '1.5rem' : '2rem',
                             background: 'var(--card-bg)',
                             borderRadius: '8px',
                             border: '1px solid var(--border-color)',
                             boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
                         }}
                     >
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: width < 480 ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
                             <div style={{ position: 'relative' }}>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 500 }}>
                                     <User size={14} /> NAME

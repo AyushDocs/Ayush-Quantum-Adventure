@@ -1,15 +1,17 @@
 import { Activity, ArrowRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 export default function Home() {
+    const { width } = useWindowSize();
     return (
         <div className="container" style={{ marginTop: '5rem', maxWidth: '1000px' }}>
             {/* Hero Section */}
-            <div style={{ marginBottom: '6rem', borderLeft: '2px solid var(--accent-color)', paddingLeft: '2rem' }}>
+            <div style={{ marginBottom: '4rem', borderLeft: '2px solid var(--accent-color)', paddingLeft: '1.5rem' }}>
                 <div style={{ 
                     fontFamily: 'monospace', 
                     color: 'var(--accent-color)', 
-                    fontSize: '1rem', 
+                    fontSize: '0.9rem', 
                     marginBottom: '1rem',
                     letterSpacing: '2px',
                     textTransform: 'uppercase'
@@ -17,15 +19,15 @@ export default function Home() {
                     Engineering Log / 0x01
                 </div>
                 <div style={{ 
-                    marginBottom: '4rem',
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1fr',
-                    gap: '3rem',
+                    marginBottom: '2rem',
+                    display: 'flex',
+                    flexDirection: width < 768 ? 'column-reverse' : 'row',
+                    gap: '2rem',
                     alignItems: 'center'
                 }}>
-                    <div>
+                    <div style={{ flex: 2 }}>
                         <h1 style={{ 
-                            fontSize: '5rem', 
+                            fontSize: width < 768 ? '3.5rem' : '5rem', 
                             fontWeight: '800', 
                             lineHeight: '0.9', 
                             margin: '0 0 1.5rem 0',
@@ -36,34 +38,32 @@ export default function Home() {
                         </h1>
                         <div style={{ 
                             color: 'var(--text-secondary)', 
-                            fontSize: '1.25rem', 
+                            fontSize: width < 768 ? '1.1rem' : '1.25rem', 
                             maxWidth: '700px', 
                             lineHeight: '1.7',
                             marginBottom: '1rem'
                         }}>
                             <p style={{ marginBottom: '1rem' }}>
                                 I design and verify high-assurance software systems, with a focus on correctness and reliability. 
-                                My work spans full-stack engineering, computational physics (Diatomic CO, Lattice Dynamics), and formal modeling.
-                            </p>
-                            <p style={{ margin: 0 }}>
-                                This log acts as a living documentation of the systems I build and the concepts I explore.
-                                You can explore my active content and visualizations below.
+                                My work spans full-stack engineering, computational physics, and formal modeling.
                             </p>
                         </div>
                     </div>
                     
                     {/* Profile Photo */}
                     <div style={{ 
+                        flex: 1,
                         display: 'flex', 
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        width: '100%'
                     }}>
                         <img 
                             src="/Ayush-Quantum-Adventure/ayush-profile.jpg" 
                             alt="Ayush" 
                             style={{ 
-                                width: '280px',
-                                height: '280px',
+                                width: width < 768 ? '220px' : '280px',
+                                height: width < 768 ? '220px' : '280px',
                                 objectFit: 'cover',
                                 borderRadius: '12px',
                                 border: '2px solid var(--border-color)',

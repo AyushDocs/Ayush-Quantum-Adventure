@@ -1,12 +1,14 @@
 import { Terminal } from 'lucide-react';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 export default function About() {
+    const { width } = useWindowSize();
     return (
         <div className="container" style={{ maxWidth: '1000px', marginTop: '5rem' }}>
             <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: '1fr 2fr', 
-                gap: '4rem',
+                gridTemplateColumns: width < 768 ? '1fr' : '1fr 2fr', 
+                gap: width < 768 ? '2rem' : '4rem',
                 borderTop: '1px solid var(--border-color)',
                 paddingTop: '2rem'
             }}>
@@ -25,7 +27,7 @@ export default function About() {
                         <span>usr/bin/identity</span>
                     </div>
                     <h1 style={{ 
-                        fontSize: '3.5rem', 
+                        fontSize: width < 768 ? '2.5rem' : '3.5rem', 
                         fontWeight: '700', 
                         lineHeight: '1',
                         margin: '0 0 1.5rem 0',
@@ -47,7 +49,7 @@ export default function About() {
                 </div>
 
                 {/* Right Column: The Signal */}
-                <div style={{ fontSize: '1.25rem', lineHeight: '1.7', color: 'var(--text-secondary)' }}>
+                <div style={{ fontSize: width < 768 ? '1.1rem' : '1.25rem', lineHeight: '1.7', color: 'var(--text-secondary)' }}>
                     <p style={{ marginBottom: '2rem' }}>
                         I’m interested in how complex systems are <span style={{color:'var(--text-color)', fontWeight:500}}>structured</span>, <span style={{color:'var(--text-color)', fontWeight:500}}>constrained</span>, and <span style={{color:'var(--text-color)', fontWeight:500}}>made reliable</span>.
                         I approach problems by reducing them to their essential components and building upward.

@@ -63,6 +63,12 @@ a:hover {
   padding: 2rem;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+}
+
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
@@ -81,5 +87,19 @@ a:hover {
 
 h1, h2, h3 {
   font-weight: 600;
-  color: #fff;
+  color: var(--text-color); /* Fixed: previous was hardcoded white but variable is dark */
+}
+
+/* Responsive Hide/Show */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  .desktop-only {
+    display: none;
+  }
 }

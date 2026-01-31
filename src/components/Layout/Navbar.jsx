@@ -1,7 +1,9 @@
 import { Atom } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 export default function Navbar() {
+  const { width } = useWindowSize();
   const location = useLocation();
 
   const isActive = (path) => {
@@ -17,23 +19,48 @@ export default function Navbar() {
     { name: 'Connect', path: '/connect' },
   ];
 
+  const isSmall = width < 768;
+
   return (
     <nav style={{
         borderBottom: '1px solid var(--border-color)',
-        padding: '1rem 2rem',
-        display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
+        padding: isSmall ? '0.75rem 1rem' : '1rem 2rem',
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
         alignItems: 'center',
         background: 'var(--bg-color)',
-        zIndex: 10
+        zIndex: 10,
+        gap: '1rem'
     }}>
-      {/* Left Links */}
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      {/* Brand - Center on mobile, Left on Desktop */}
+      <div style={{ 
+          display: 'flex', 
+          justifyContent: isSmall ? 'center' : 'flex-start', 
+          order: isSmall ? 1 : 2, 
+          flex: isSmall ? '1 0 100%' : 'unset' 
+      }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-color)' }}>
+            <Atom color="var(--accent-color)" size={24} />
+            <span style={{ fontSize: '1.1rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Ayush Docs</span>
+          </Link>
+      </div>
+
+      {/* Nav Links */}
+      <div style={{ 
+          display: 'flex', 
+          gap: isSmall ? '1rem' : '2rem', 
+          order: isSmall ? 2 : 1,
+          flex: isSmall ? 1 : 'unset',
+          justifyContent: isSmall ? 'center' : 'flex-start'
+      }}>
          <Link 
             to="/about"
             style={{
                 color: isActive('/about') ? 'var(--accent-color)' : 'var(--text-color)',
-                fontWeight: isActive('/about') ? 'bold' : 'normal'
+                fontWeight: isActive('/about') ? 'bold' : 'normal',
+                fontSize: '0.9rem'
             }}
          >
             About
@@ -42,33 +69,41 @@ export default function Navbar() {
             to="/learn"
             style={{
                 color: isActive('/learn') ? 'var(--accent-color)' : 'var(--text-color)',
-                fontWeight: isActive('/learn') ? 'bold' : 'normal'
+                fontWeight: isActive('/learn') ? 'bold' : 'normal',
+                fontSize: '0.9rem'
             }}
          >
             Learn
          </Link>
+         {isSmall && (
+            <Link 
+                to="/connect"
+                style={{
+                    color: isActive('/connect') ? 'var(--accent-color)' : 'var(--text-color)',
+                    fontWeight: isActive('/connect') ? 'bold' : 'normal',
+                    fontSize: '0.9rem'
+                }}
+            >
+                Connect
+            </Link>
+         )}
       </div>
 
-      {/* Center Brand */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-color)' }}>
-            <Atom color="var(--accent-color)" size={28} />
-            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Ayush Docs</span>
-          </Link>
-      </div>
-
-      {/* Right Links */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '2rem' }}>
-        <Link 
-            to="/connect"
-            style={{
-                color: isActive('/connect') ? 'var(--accent-color)' : 'var(--text-color)',
-                fontWeight: isActive('/connect') ? 'bold' : 'normal'
-            }}
-         >
-            Connect
-         </Link>
-      </div>
+      {/* Connect Link - Desktop only */}
+      {!isSmall && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1.5rem', order: 3 }}>
+            <Link 
+                to="/connect"
+                style={{
+                    color: isActive('/connect') ? 'var(--accent-color)' : 'var(--text-color)',
+                    fontWeight: isActive('/connect') ? 'bold' : 'normal',
+                    fontSize: '0.9rem'
+                }}
+            >
+                Connect
+            </Link>
+        </div>
+      )}
     </nav>
   );
 }
