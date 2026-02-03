@@ -1,8 +1,9 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import Navbar from './components/Layout/Navbar';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
+import Navbar from './components/Layout/Navbar';
 import DiatomicApp from './modules/DiatomicViz/DiatomicApp';
+import XRayDiffractionApp from './modules/XRayDiffraction/XRayDiffractionApp';
 import About from './pages/About';
 import Connect from './pages/Connect';
 import Home from './pages/Home';
@@ -17,7 +18,8 @@ function App() {
         '/about': 'About | Ayush Docs',
         '/connect': 'Connect | Ayush Docs',
         '/learn': 'Modules | Ayush Docs',
-        '/learn/diatomic-vibration': 'Diatomic Model | Ayush Docs'
+        '/learn/diatomic-vibration': 'Diatomic Model | Ayush Docs',
+        '/learn/xray-diffraction': 'X-ray Diffraction | Ayush Docs'
     };
     document.title = titles[location.pathname] || 'Ayush Docs | System Log';
   }, [location]);
@@ -35,6 +37,7 @@ function App() {
           <Route path="/learn" element={<LearnLayout />}>
              <Route index element={<LearnIndex />} />
              <Route path="diatomic-vibration" element={<DiatomicApp />} />
+             <Route path="xray-diffraction" element={<XRayDiffractionApp />} />
           </Route>
         </Routes>
       </div>

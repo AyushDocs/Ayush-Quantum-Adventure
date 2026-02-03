@@ -1,6 +1,6 @@
 export default function LearnIndex() {
     return (
-        <div style={{ maxWidth: '800px', padding: '2rem 0' }}>
+        <div style={{ maxWidth: '800px', padding: '2rem' }}>
             <h1 style={{ 
                 fontSize: '2.5rem', 
                 marginBottom: '1.5rem', 

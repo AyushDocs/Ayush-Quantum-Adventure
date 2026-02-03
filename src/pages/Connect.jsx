@@ -52,7 +52,7 @@ export default function Connect() {
     return (
         <motion.div 
             className="container" 
-            style={{ maxWidth: '1000px', marginTop: width < 768 ? '2rem' : '5rem' }}
+            style={{ maxWidth: '1000px', marginTop: width < 768 ? '2rem' : '5rem', marginLeft: 'auto', marginRight: 'auto', padding: '0 1.5rem' }}
             initial="hidden"
             animate="visible"
             variants={containerVariants}

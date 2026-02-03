@@ -5,6 +5,7 @@ const Sidebar = () => {
     const modules = [
         { name: 'Introduction', path: '/learn' },
         { name: 'Diatomic Vibration', path: '/learn/diatomic-vibration' },
+        { name: 'X-ray Diffraction', path: '/learn/xray-diffraction' },
     ];
 
     const { width } = useWindowSize();
@@ -31,7 +32,7 @@ const Sidebar = () => {
             }}>
                 Modules
             </h3>
-            <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: '8px', overflowX: isMobile ? 'auto' : 'visible' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {modules.map(mod => (
                     <NavLink 
                         key={mod.path} 
@@ -45,6 +46,7 @@ const Sidebar = () => {
                             border: isActive ? '1px solid var(--border-color)' : '1px solid transparent',
                             fontWeight: isActive ? '600' : 'normal',
                             display: 'block',
+                            textAlign: isMobile ? 'center' : 'left',
                             transition: 'all 0.2s',
                             whiteSpace: 'nowrap'
                         })}
@@ -69,7 +71,7 @@ export default function LearnLayout() {
             </div>
             
             {/* Main Content Area */}
-            <div style={{ flex: 1, overflow: 'auto', height: isMobile ? 'auto' : 'calc(100vh - 64px)', padding: isMobile ? '1rem' : '2rem' }}>
+            <div style={{ flex: 1, overflow: 'auto', height: isMobile ? 'auto' : 'calc(100vh - 64px)' }}>
                 <Outlet />
             </div>
         </div>
