@@ -1,11 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { learnModules } from '../../modules/registry';
 
 const Sidebar = () => {
     const modules = [
         { name: 'Introduction', path: '/learn' },
-        { name: 'Diatomic Vibration', path: '/learn/diatomic-vibration' },
-        { name: 'X-ray Diffraction', path: '/learn/xray-diffraction' },
+        ...learnModules.map(m => ({ name: m.name, path: `/learn/${m.id}` }))
     ];
 
     const { width } = useWindowSize();

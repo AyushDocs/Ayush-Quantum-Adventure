@@ -2,25 +2,31 @@ import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
 import Navbar from './components/Layout/Navbar';
-import DiatomicApp from './modules/DiatomicViz/DiatomicApp';
-import XRayDiffractionApp from './modules/XRayDiffraction/XRayDiffractionApp';
+import { learnModules } from './modules/registry';
 import About from './pages/About';
 import Connect from './pages/Connect';
 import Home from './pages/Home';
 import LearnLayout from './pages/Learn/LearnLayout';
 import LearnIndex from './pages/Learn/index';
+
 function App() {
   const location = useLocation();
   
   useEffect(() => {
-    const titles = {
-        '/': 'System Log | Ayush Docs',
-        '/about': 'About | Ayush Docs',
-        '/connect': 'Connect | Ayush Docs',
-        '/learn': 'Modules | Ayush Docs',
-        '/learn/diatomic-vibration': 'Diatomic Model | Ayush Docs',
-        '/learn/xray-diffraction': 'X-ray Diffraction | Ayush Docs'
+    // Static page titles
+    const staticTitles = {
+      '/': 'System Log | Ayush Docs',
+      '/about': 'About | Ayush Docs',
+      '/connect': 'Connect | Ayush Docs',
+      '/learn': 'Modules | Ayush Docs',
     };
+    
+    // Dynamic module titles from registry
+    const moduleTitles = Object.fromEntries(
+      learnModules.map(m => [`/learn/${m.id}`, m.title])
+    );
+    
+    const titles = { ...staticTitles, ...moduleTitles };
     document.title = titles[location.pathname] || 'Ayush Docs | System Log';
   }, [location]);
 
@@ -36,8 +42,9 @@ function App() {
           {/* Learn Section with specific Layout */}
           <Route path="/learn" element={<LearnLayout />}>
              <Route index element={<LearnIndex />} />
-             <Route path="diatomic-vibration" element={<DiatomicApp />} />
-             <Route path="xray-diffraction" element={<XRayDiffractionApp />} />
+             {learnModules.map(m => (
+               <Route key={m.id} path={m.id} element={<m.component />} />
+             ))}
           </Route>
         </Routes>
       </div>
@@ -47,3 +54,4 @@ function App() {
 }
 
 export default App
+

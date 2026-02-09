@@ -79,12 +79,6 @@ export default function EwaldSphere3D({ state }) {
                 />
             </mesh>
             
-            {/* Origin marker (sample position at -ewaldRadius on x-axis) */}
-            <mesh position={[-ewaldRadius, 0, 0]}>
-                <sphereGeometry args={[0.05, 16, 16]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
-            </mesh>
-            
             {/* X-ray source position (at +ewaldRadius on x-axis, right side) */}
             <mesh position={[ewaldRadius, 0, 0]}>
                 <sphereGeometry args={[0.12, 16, 16]} />
@@ -113,18 +107,6 @@ export default function EwaldSphere3D({ state }) {
                 Ewald Sphere
             </Text>
             
-            {/* Incident beam (from source to sample at -ewaldRadius) */}
-            <line>
-                <bufferGeometry>
-                    <bufferAttribute
-                        attach="attributes-position"
-                        count={2}
-                        array={new Float32Array([ewaldRadius, 0, 0, -ewaldRadius, 0, 0])}
-                        itemSize={3}
-                    />
-                </bufferGeometry>
-                <lineBasicMaterial color="#ffff00" linewidth={2} />
-            </line>
             
             {/* Reciprocal lattice points */}
             {rotatedPoints.map((point, idx) => {
@@ -156,14 +138,14 @@ export default function EwaldSphere3D({ state }) {
                                     ({point.h} {point.k} {point.l})
                                 </Text>
                                 
-                                {/* Diffracted beam (from sample to lattice point) */}
+                                {/* Diffracted beam (from sphere center to lattice point) */}
                                 <line>
                                     <bufferGeometry>
                                         <bufferAttribute
                                             attach="attributes-position"
                                             count={2}
                                             array={new Float32Array([
-                                                -ewaldRadius, 0, 0,
+                                                0, 0, 0,
                                                 point.rotatedX, point.rotatedY, point.rotatedZ
                                             ])}
                                             itemSize={3}
@@ -177,8 +159,41 @@ export default function EwaldSphere3D({ state }) {
                 );
             })}
             
-            {/* Coordinate axes */}
-            <axesHelper args={[ewaldRadius * 1.2]} />
+            {/* Coordinate axes - uniform color with labels */}
+            {(() => {
+                const axisLen = ewaldRadius * 1.2;
+                const axisColor = '#00ccff';
+                return (
+                    <>
+                        {/* X axis */}
+                        <line>
+                            <bufferGeometry>
+                                <bufferAttribute attach="attributes-position" count={2} array={new Float32Array([0,0,0, axisLen,0,0])} itemSize={3} />
+                            </bufferGeometry>
+                            <lineBasicMaterial color={axisColor} />
+                        </line>
+                        <Text position={[axisLen + 0.1, 0, 0]} fontSize={0.12} color={axisColor}>X</Text>
+                        
+                        {/* Y axis */}
+                        <line>
+                            <bufferGeometry>
+                                <bufferAttribute attach="attributes-position" count={2} array={new Float32Array([0,0,0, 0,axisLen,0])} itemSize={3} />
+                            </bufferGeometry>
+                            <lineBasicMaterial color={axisColor} />
+                        </line>
+                        <Text position={[0, axisLen + 0.1, 0]} fontSize={0.12} color={axisColor}>Y</Text>
+                        
+                        {/* Z axis */}
+                        <line>
+                            <bufferGeometry>
+                                <bufferAttribute attach="attributes-position" count={2} array={new Float32Array([0,0,0, 0,0,axisLen])} itemSize={3} />
+                            </bufferGeometry>
+                            <lineBasicMaterial color={axisColor} />
+                        </line>
+                        <Text position={[0, 0, axisLen + 0.1]} fontSize={0.12} color={axisColor}>Z</Text>
+                    </>
+                );
+            })()}
         </group>
     );
 }
