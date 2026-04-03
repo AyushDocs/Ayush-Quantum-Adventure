@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /tmp/
+Sitemap: https://ayushdocs.github.io/Ayush-Quantum-Adventure/sitemap.xml
