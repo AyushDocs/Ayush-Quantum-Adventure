@@ -44,8 +44,8 @@ export default function DiatomicApp() {
                 borderLeft: isMobile ? 'none' : '1px solid var(--border-color)', 
                 borderTop: isMobile ? '1px solid var(--border-color)' : 'none',
                 padding: isMobile ? '15px' : (effectiveWidth < 1300 ? '16px' : '20px'), 
-                overflowY: 'auto',
-                height: isMobile ? '50vh' : '100%',
+                overflowY: isMobile ? 'visible' : 'auto',
+                height: 'auto',
                 flexShrink: 0
             }}>
                 <DiatomicControls state={diatomState} />

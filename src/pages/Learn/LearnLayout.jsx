@@ -117,7 +117,7 @@ export default function LearnLayout() {
         <div style={{ 
             display: 'flex', 
             flexDirection: isMobile ? 'column' : 'row', 
-            overflow: 'hidden',
+            overflow: isMobile ? 'auto' : 'hidden',
             height: isMobile ? 'auto' : '100%',
             width: '100%',
             position: 'relative'

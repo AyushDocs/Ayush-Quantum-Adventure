@@ -30,9 +30,9 @@ export default function BerryPhaseApp() {
                 flex: 1, 
                 position: 'relative', 
                 background: '#0d0d0d', 
-                overflowY: 'auto',
-                padding: '20px',
-                height: '100%',
+                overflowY: isMobile ? 'visible' : 'auto',
+                padding: isMobile ? '15px' : '20px',
+                height: isMobile ? 'auto' : '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '20px'
@@ -66,8 +66,8 @@ export default function BerryPhaseApp() {
                 borderLeft: isMobile ? 'none' : '1px solid var(--border-color)', 
                 borderTop: isMobile ? '1px solid var(--border-color)' : 'none',
                 padding: isMobile ? '20px' : (effectiveWidth < 1300 ? '24px' : '32px'), 
-                overflowY: 'auto',
-                height: isMobile ? 'auto' : '100%',
+                overflowY: isMobile ? 'visible' : 'auto',
+                height: 'auto',
                 boxShadow: isMobile ? 'none' : '-10px 0 30px rgba(0,0,0,0.5)',
                 zIndex: 10,
                 flexShrink: 0

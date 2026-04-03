@@ -1,8 +1,15 @@
+import { useWindowSize } from '../../hooks/useWindowSize';
+
 export default function LearnIndex() {
+    const { width } = useWindowSize();
+    const isMobile = width < 768;
+
     return (
-        <div style={{ maxWidth: '800px', padding: '2rem' }}>
+        <div style={{ maxWidth: '800px', padding: isMobile ? '1.5rem' : '3rem' }}>
             <h1 style={{ 
-                fontSize: '2.5rem', 
+                fontSize: isMobile ? '1.8rem' : '2.8rem', 
+                fontWeight: '900',
+                letterSpacing: '-1.5px',
                 marginBottom: '1.5rem', 
                 color: 'var(--text-color)',
                 borderBottom: '1px solid var(--border-color)',

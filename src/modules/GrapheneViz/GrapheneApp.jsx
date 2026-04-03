@@ -34,16 +34,17 @@ export default function GrapheneApp() {
             {/* Main Content Area */}
             <div className="custom-scrollbar" style={{ 
                 flex: 1, 
-                overflowY: 'auto',
+                overflowY: isMobile ? 'visible' : 'auto',
                 padding: isMobile ? '20px' : '40px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '40px'
+                gap: isMobile ? '20px' : '40px',
+                height: isMobile ? 'auto' : '100%'
             }}>
                 {/* Header Section */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '10px' }}>
+                        <h1 style={{ fontSize: isMobile ? '1.55rem' : '2.5rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '10px' }}>
                             GRAPHENE & <span style={{ color: '#10b981' }}>DIRAC LAB</span>
                         </h1>
                         <p style={{ color: '#888', fontSize: '1rem', maxWidth: '800px', lineHeight: '1.6' }}>
@@ -128,8 +129,8 @@ export default function GrapheneApp() {
                 background: '#0a0a0a', 
                 borderLeft: isMobile ? 'none' : '1px solid #1a1a1a', 
                 padding: isMobile ? '20px' : (effectiveWidth < 1300 ? '24px' : '32px'),
-                overflowY: 'auto',
-                height: isMobile ? 'auto' : '100%',
+                overflowY: isMobile ? 'visible' : 'auto',
+                height: 'auto',
                 flexShrink: 0
             }}>
                 <HaldaneControls state={state} />

@@ -39,12 +39,13 @@ export default function MajoranaApp() {
             {/* Main Content Area */}
             <div className="custom-scrollbar" style={{ 
                 flex: 1, 
-                overflowY: 'auto',
+                overflowY: isMobile ? 'visible' : 'auto',
                 padding: isMobile ? '16px' : isCompact ? '24px' : '40px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: isMobile ? '20px' : '30px',
-                minWidth: 0
+                minWidth: 0,
+                height: isMobile ? 'auto' : '100%'
             }}>
                 {/* Header */}
                 <div>
@@ -106,8 +107,8 @@ export default function MajoranaApp() {
                 background: '#0a0a0a', 
                 borderLeft: isMobile ? 'none' : '1px solid #1a1a1a', 
                 padding: isMobile ? '20px' : (effectiveWidth < 1300 ? '16px' : '24px'),
-                overflowY: 'auto',
-                height: isMobile ? 'auto' : '100%',
+                overflowY: isMobile ? 'visible' : 'auto',
+                height: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '24px',

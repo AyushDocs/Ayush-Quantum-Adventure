@@ -33,12 +33,13 @@ export default function AltermagnetApp() {
             {/* Main Content Area */}
             <div className="custom-scrollbar" style={{ 
                 flex: 1, 
-                overflowY: 'auto',
+                overflowY: isMobile ? 'visible' : 'auto',
                 padding: isMobile ? '16px' : isCompact ? '24px' : '40px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: isMobile ? '20px' : '30px',
-                minWidth: 0 // prevents flex overflow
+                minWidth: 0, // prevents flex overflow
+                height: isMobile ? 'auto' : '100%'
             }}>
                 {/* Header */}
                 <div>
