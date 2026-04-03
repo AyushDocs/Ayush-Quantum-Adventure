@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Footer from './components/Layout/Footer';
 import Navbar from './components/Layout/Navbar';
 import { useWindowSize } from './hooks/useWindowSize';
+import ScrollToTop from './components/Layout/ScrollToTop';
 import { learnModules } from './modules/registry';
 import About from './pages/About';
 import Connect from './pages/Connect';
@@ -13,6 +14,7 @@ import LearnIndex from './pages/Learn/index';
 function App() {
   const { width } = useWindowSize();
   const location = useLocation();
+  const mainScrollRef = useRef(null);
   
   useEffect(() => {
     // Static page titles
@@ -36,12 +38,15 @@ function App() {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <Navbar />
-      <div style={{ 
+      <div 
+        ref={mainScrollRef}
+        style={{ 
           flex: 1, 
           position: 'relative', 
           overflow: isLearnRoute ? (width < 768 ? 'auto' : 'hidden') : 'auto',
           height: isLearnRoute ? (width < 768 ? 'auto' : '100%') : 'auto'
       }}>
+        {isLearnRoute && <ScrollToTop containerRef={mainScrollRef} />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

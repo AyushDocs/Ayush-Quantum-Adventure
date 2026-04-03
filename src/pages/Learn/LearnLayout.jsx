@@ -3,7 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useWindowSize, getEffectiveWidth } from '../../hooks/useWindowSize';
 import { useZoomLevel } from '../../hooks/useZoomLevel';
 import { learnModules } from '../../modules/registry';
-import { Search, Menu, X, ChevronRight } from 'lucide-react';
+import { Search, Menu, X, ChevronRight, ChevronsUp } from 'lucide-react';
 
 const Sidebar = () => {
     const modules = [
@@ -114,14 +114,16 @@ export default function LearnLayout() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            flexDirection: isMobile ? 'column' : 'row', 
-            overflow: isMobile ? 'auto' : 'hidden',
-            height: isMobile ? 'auto' : '100%',
-            width: '100%',
-            position: 'relative'
-        }}>
+        <div 
+            style={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row', 
+                overflow: isMobile ? 'auto' : 'hidden',
+                height: isMobile ? 'auto' : '100%',
+                width: '100%',
+                position: 'relative'
+            }}
+        >
             {/* Sidebar (Desktop only) */}
             {!isMobile && (
                 <div style={{ minHeight: '100%', overflow: 'hidden', flexShrink: 0 }}>
