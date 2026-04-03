@@ -59,7 +59,7 @@ export default function Home() {
                         width: '100%'
                     }}>
                         <img 
-                            src="/Ayush-Quantum-Adventure/ayush-profile.jpg" 
+                            src={`${import.meta.env.BASE_URL}ayush-profile.jpg`} 
                             alt="Ayush" 
                             style={{ 
                                 width: width < 768 ? '220px' : '280px',

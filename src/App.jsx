@@ -29,11 +29,12 @@ function App() {
     const titles = { ...staticTitles, ...moduleTitles };
     document.title = titles[location.pathname] || 'Ayush Docs | System Log';
   }, [location]);
+  const isLearnRoute = location.pathname.startsWith('/learn');
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <Navbar />
-      <div style={{ flex: 1, position: 'relative' }}>
+      <div style={{ flex: 1, position: 'relative', overflow: isLearnRoute ? 'hidden' : 'auto' }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -48,7 +49,7 @@ function App() {
           </Route>
         </Routes>
       </div>
-      <Footer />
+      {!isLearnRoute && <Footer />}
     </div>
   )
 }

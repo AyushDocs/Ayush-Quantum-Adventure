@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --bg-color: #ffffff;             /* 70% White */
   --card-bg: #f4f1ea;              /* 20% Beige */
@@ -36,18 +40,22 @@ a:hover {
 
 /* Explicit scrollbar for specific containers */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--bg-color); 
+  background: rgba(0, 0, 0, 0.05); 
+  border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #dcd6c8; 
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15); 
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent-color); 
+  background-clip: content-box;
 }
 
 /* Text Selection */
@@ -88,6 +96,70 @@ a:hover {
 h1, h2, h3 {
   font-weight: 600;
   color: var(--text-color); /* Fixed: previous was hardcoded white but variable is dark */
+}
+
+/* Zoom Responsive - Scales content for browser zoom levels */
+.zoom-scale-container {
+  transform-origin: top left;
+  width: 100%;
+  height: 100%;
+}
+
+.zoom-scale-150 {
+  transform: scale(1.5);
+  width: 66.67%;
+  height: 66.67%;
+}
+
+.zoom-scale-125 {
+  transform: scale(1.25);
+  width: 80%;
+  height: 80%;
+}
+
+.zoom-scale-175 {
+  transform: scale(1.75);
+  width: 57.14%;
+  height: 57.14%;
+}
+
+.zoom-scale-200 {
+  transform: scale(2);
+  width: 50%;
+  height: 50%;
+}
+
+/* Control Panel zoom compensation */
+.control-panel-zoom {
+  transform-origin: top left;
+}
+
+.control-panel-zoom-150 {
+  transform: scale(1.5);
+  width: 66.67%;
+  margin-bottom: 50%;
+  margin-right: 33.33%;
+}
+
+.control-panel-zoom-125 {
+  transform: scale(1.25);
+  width: 80%;
+  margin-bottom: 25%;
+  margin-right: 20%;
+}
+
+.control-panel-zoom-175 {
+  transform: scale(1.75);
+  width: 57.14%;
+  margin-bottom: 75%;
+  margin-right: 42.86%;
+}
+
+.control-panel-zoom-200 {
+  transform: scale(2);
+  width: 50%;
+  margin-bottom: 100%;
+  margin-right: 50%;
 }
 
 /* Responsive Hide/Show */

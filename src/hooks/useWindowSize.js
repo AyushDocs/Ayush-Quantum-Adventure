@@ -22,3 +22,16 @@ export function useWindowSize() {
 
   return windowSize;
 }
+
+export function getEffectiveWidth(width) {
+  if (typeof window === 'undefined') return width;
+  const screenAvailWidth = window.screen.availWidth;
+  const outerWidth = window.outerWidth;
+  if (outerWidth > 0 && screenAvailWidth > 0) {
+    const zoomLevel = Math.round((screenAvailWidth / outerWidth) * 100);
+    if (zoomLevel > 100) {
+      return Math.round(width * (100 / zoomLevel));
+    }
+  }
+  return width;
+}
