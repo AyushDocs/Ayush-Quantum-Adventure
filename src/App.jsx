@@ -43,8 +43,9 @@ function App() {
         style={{ 
           flex: 1, 
           position: 'relative', 
-          overflow: isLearnRoute ? (width < 768 ? 'auto' : 'hidden') : 'auto',
-          height: isLearnRoute ? (width < 768 ? 'auto' : '100%') : 'auto'
+          overflowX: 'hidden',
+          overflowY: isLearnRoute ? (width < 768 ? 'auto' : 'hidden') : 'auto',
+          height: '100%'
       }}>
         {isLearnRoute && <ScrollToTop containerRef={mainScrollRef} />}
         <Routes>
@@ -67,4 +68,3 @@ function App() {
 }
 
 export default App
-
