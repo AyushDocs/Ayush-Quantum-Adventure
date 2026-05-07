@@ -19,5 +19,40 @@ import fermiLiquidConfig from './FermiLiquid_Viz/module.config';
 import symmetryConfig from './Symmetry_Viz/module.config';
 import thinFilmConfig from './ThinFilm_Lab/module.config';
 import ramanConfig from './Raman_Viz/module.config';
+import aharonovBohmConfig from './AharonovBohm_Viz/module.config';
 
-export const learnModules = [diatomicConfig, xrayConfig, berryConfig, quantumHallConfig, grapheneConfig, superconductorConfig, weylConfig, andreevConfig, majoranaConfig, alterConfig, topologicalConfig, topological3DConfig, twoDEGConfig, ybcoConfig, twistedGrapheneConfig, skyrmionConfig, superfluidConfig, fermiLiquidConfig, symmetryConfig, ramanConfig, thinFilmConfig];
+export const learnModules = [
+  // Fundamentals & Spectroscopy
+  diatomicConfig,
+  ramanConfig,
+  xrayConfig,
+  
+  // Quantum Effects & Phases
+  aharonovBohmConfig,
+  berryConfig,
+  symmetryConfig,
+  
+  // Low-Dimensional Systems
+  twoDEGConfig,
+  grapheneConfig,
+  twistedGrapheneConfig,
+  
+  // Collective Phenomena
+  fermiLiquidConfig,
+  superfluidConfig,
+  superconductorConfig,
+  ybcoConfig,
+  andreevConfig,
+  
+  // Topology & Advanced Materials
+  quantumHallConfig,
+  topologicalConfig,
+  topological3DConfig,
+  weylConfig,
+  majoranaConfig,
+  
+  // Exotic States & Lab
+  skyrmionConfig,
+  alterConfig,
+  thinFilmConfig
+];
