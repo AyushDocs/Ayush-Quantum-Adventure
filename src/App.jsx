@@ -10,6 +10,9 @@ import Connect from './pages/Connect';
 import Home from './pages/Home';
 import LearnLayout from './pages/Learn/LearnLayout';
 import LearnIndex from './pages/Learn/index';
+import Visualizations from './pages/Learn/Visualizations';
+import Formulas from './pages/Learn/Formulas';
+import ResearchPapers from './pages/Learn/ResearchPapers';
 
 function App() {
   const { width } = useWindowSize();
@@ -56,8 +59,11 @@ function App() {
           {/* Learn Section with specific Layout */}
           <Route path="/learn" element={<LearnLayout />}>
              <Route index element={<LearnIndex />} />
+             <Route path="visualizations" element={<Visualizations />} />
+             <Route path="formulas" element={<Formulas />} />
+             <Route path="papers" element={<ResearchPapers />} />
              {learnModules.map(m => (
-               <Route key={m.id} path={m.id} element={<m.component />} />
+               <Route key={m.id} path={`visualizations/${m.id}`} element={<m.component />} />
              ))}
           </Route>
         </Routes>

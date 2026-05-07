@@ -158,10 +158,10 @@ export default function OrbitalViewer3D({ t1 }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
                 <div>
                   <h4 style={{ color: '#10b981', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>
-                      Interactive Atomic Hopper
+                      Hybridization Viewer (sp² + pᶻ)
                   </h4>
                   <p style={{ fontSize: '0.65rem', color: '#666', marginTop: '4px' }}>
-                      Drag sliders to explore the honeycomb orbitals.
+                      Visualizing the 1s², 2s², 2p² transition to the conductively active pᶻ highway.
                   </p>
                 </div>
                 {/* Visual Controls */}

@@ -145,7 +145,7 @@ export default function KleinTunnelingLab({ mass }) {
             <canvas ref={canvasRef} width={800} height={350} style={{ width: '100%', height: '300px', borderRadius: '16px', border: '1px solid #111' }} />
             <div style={{ marginTop: '20px', padding: '18px', background: 'rgba(168, 85, 247, 0.05)', borderRadius: '16px', borderLeft: '4px solid #a855f7' }}>
                 <p style={{ fontSize: '0.8rem', color: '#ccc', lineHeight: '1.6' }}>
-                    <span style={{ color: '#a855f7', fontWeight: 'bold' }}>PHYSICS NOTE:</span> In Graphene, normal incidence (θ = 0°) always results in **100% Transmission** due to pseudospin conservation. At other angles, the transmission probability oscillates based on the barrier height **V₀** (Fabry-Pérot resonance). Try moving the **V₀ slider** slowly while the angle is at 30° to see the probability bar "bounce" during resonance.
+                    <span style={{ color: '#a855f7', fontWeight: 'bold' }}>PHYSICS NOTE:</span> In Graphene, normal incidence (θ = 0°) always results in <b style={{color: '#fff'}}>100% Transmission</b> due to pseudospin conservation. At other angles, the transmission probability oscillates based on the barrier height <b style={{color: '#fff'}}>V₀</b> (Fabry-Pérot resonance). Try moving the <b style={{color: '#fff'}}>V₀ slider</b> slowly while the angle is at 30° to see the probability bar "bounce" during resonance.
                 </p>
             </div>
         </div>

@@ -7,8 +7,12 @@ import KleinTunnelingLab from './Components/KleinTunnelingLab';
 import PhaseDiagramPlot from './Components/PhaseDiagramPlot';
 import OrbitalViewer3D from './Components/OrbitalViewer3D';
 import HaldaneControls from './Components/HaldaneControls';
+import BrillouinZoneViz from './Components/BrillouinZoneViz';
+import SymmetryLab from './Components/SymmetryLab';
+import TopologicalLab from './Components/TopologicalLab';
 import { useGrapheneState } from './useGrapheneState';
-import { BookOpen, Zap, Globe } from 'lucide-react';
+import { BookOpen, Zap, Globe, Atom } from 'lucide-react';
+import MobilityComparisonCard from './Components/MobilityComparisonCard';
 
 export default function GrapheneApp() {
     const { width } = useWindowSize();
@@ -48,7 +52,7 @@ export default function GrapheneApp() {
                             GRAPHENE & <span style={{ color: '#10b981' }}>DIRAC LAB</span>
                         </h1>
                         <p style={{ color: '#888', fontSize: '1rem', maxWidth: '800px', lineHeight: '1.6' }}>
-                           Exploration of the Honeycomb lattice, Berry curvature topology, and the **Klein Paradox** in Dirac fermion transport.
+                           Exploration of the Honeycomb lattice, Berry curvature topology, and the <b style={{color: '#fff'}}>Klein Paradox</b> in Dirac fermion transport.
                         </p>
                     </div>
                 </div>
@@ -74,20 +78,24 @@ export default function GrapheneApp() {
                 <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr 2fr', gap: '30px' }}>
                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center' }}>
                          <div style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', borderLeft: '4px solid #10b981' }}>
-                            <h3 style={{ fontSize: '1.1rem', color: '#10b981', marginBottom: '10px' }}>The Sigma Floor (sp²)</h3>
-                            <p style={{ fontSize: '0.8rem', color: '#888', lineHeight: '1.6' }}>
-                               Carbon atoms use their s, px, and py orbitals to form three strong covalent bonds. This creates the "honeycomb" structural floor of graphene.
+                                <Atom size={18} color="#10b981" />
+                                <h3 style={{ fontSize: '1.1rem', color: '#10b981', margin: 0 }}>The Atomic Root (1s², 2s², 2p²)</h3>
+                            <p style={{ fontSize: '0.8rem', color: '#ccc', lineHeight: '1.6', marginTop: '10px' }}>
+                                Carbon starts with <b style={{color: '#10b981'}}>1s², 2s², 2p²</b>. In graphene, these hybridize to <b style={{color: '#10b981'}}>sp²</b>. Three electrons form strong σ-bonds, while the 4th electron stays in the <b style={{color: '#3b82f6'}}>pᶻ orbital</b> for "jumping" (hopping).
                             </p>
                          </div>
                          <div style={{ padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', borderLeft: '4px solid #3b82f6' }}>
                             <h3 style={{ fontSize: '1.1rem', color: '#3b82f6', marginBottom: '10px' }}>The Pi Highway (pᶻ)</h3>
                             <p style={{ fontSize: '0.8rem', color: '#888', lineHeight: '1.6' }}>
-                               The leftover pz orbital sticks out vertically. These dumbbells overlap to form the "electric highway" where electrons hop between atoms.
+                                The leftover pz orbital sticks out vertically. These dumbbells overlap to form the "electric highway" where electrons hop between atoms, creating the Dirac spectrum.
                             </p>
                          </div>
                      </div>
                      <OrbitalViewer3D t1={state.t1} />
                 </div>
+
+                {/* Mobility & Transistor Comparison Section */}
+                <MobilityComparisonCard isMobile={isMobile} />
 
                 {/* Middle Row: Klein Tunneling Lab (Spans full width) */}
                 <KleinTunnelingLab mass={state.mass} />
@@ -95,12 +103,19 @@ export default function GrapheneApp() {
                 {/* Bottom Row: 3D Dispersion & Berry Topology */}
                 <div style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', 
                     gap: '30px' 
                 }}>
                     <DiracConePlot calculateEnergy={state.calculateEnergy} mass={state.mass} />
+                    <BrillouinZoneViz />
                     <BerryCurvaturePlot calculateBerryCurvature={state.calculateBerryCurvature} />
                 </div>
+
+                {/* Symmetry & Topology Lab Section */}
+                <SymmetryLab 
+                    mass={state.mass} phi={state.phi} 
+                    setMass={state.setMass} setPhi={state.setPhi} 
+                />
 
                 {/* Advanced Theory Card */}
                 <div style={{ 
@@ -116,10 +131,35 @@ export default function GrapheneApp() {
                         <Globe size={20} />
                         <span style={{ fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Quantum Topology Insights</span>
                     </div>
-                    <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>The Haldane & Klein Physics</h3>
-                    <p style={{ color: '#888', fontSize: '0.92rem', lineHeight: '1.7' }}>
-                       In Graphene, the Dirac points are protected by both **Time-Reversal (T)** and **Inversion (P)** symmetry. By adding a Mass <b style={{color: '#10b981'}}>M</b>, we break Inversion symmetry. By adding a Phase <b style={{color: '#3b82f6'}}>φ</b>, we break Time-Reversal symmetry. When T-symmetry is broken but P-symmetry is kept (Haldane Phase), the <strong style={{color: '#fff'}}>Berry Curvature</strong> integrates to a non-zero Chern Number, creating the first model of a "Quantum Hall Effect" without a magnetic field.
-                    </p>
+                    <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Dirac Fermions & Symmetries</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <p style={{ color: '#888', fontSize: '0.92rem', lineHeight: '1.7' }}>
+                           Graphene's low-energy excitations are <b style={{color: '#fff'}}>massless Dirac fermions</b>. The Dirac points are protected by the combination of <b style={{color: '#fff'}}>Time-Reversal (T)</b> and <b style={{color: '#fff'}}>Spatial/Inversion (P)</b> symmetry. 
+                           <br/><br/>
+                           In the absence of a mass term, the product <i style={{color: '#fff'}}>PT</i> ensures the bands touch at the K-points. Breaking <b style={{color: '#10b981'}}>P</b> (Inversion) by creating a sublattice imbalance (Mass <i style={{color: '#10b981'}}>M</i>) or breaking <b style={{color: '#3b82f6'}}>T</b> (Time-Reversal) by adding a complex phase (Haldane Phase <i style={{color: '#3b82f6'}}>φ</i>) opens a topological gap.
+                        </p>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: '20px' }}>
+                            <div style={{ padding: '15px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                <h4 style={{ fontSize: '0.75rem', color: '#fff', marginBottom: '8px', textTransform: 'uppercase' }}>Fundamental State</h4>
+                                <p style={{ fontSize: '0.7rem', color: '#888', margin: 0 }}>
+                                    Graphene is naturally a <b style={{color: '#fff'}}>Dirac Semimetal</b>. It acts as a relativistic 2DEG where the valence and conduction bands touch at discrete points.
+                                </p>
+                            </div>
+                            <div style={{ padding: '15px', background: 'rgba(16, 185, 129, 0.05)', borderRadius: '16px', border: '1px solid rgba(16, 185, 129, 0.1)' }}>
+                                <h4 style={{ fontSize: '0.75rem', color: '#10b981', marginBottom: '8px', textTransform: 'uppercase' }}>Condition: Broken T</h4>
+                                <p style={{ fontSize: '0.7rem', color: '#888', margin: 0 }}>
+                                    If Time-Reversal symmetry is broken (via the Haldane Phase), it becomes a <b style={{color: '#fff'}}>Chern Insulator</b> with a non-zero Chern number.
+                                </p>
+                            </div>
+                            <div style={{ padding: '15px', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '16px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
+                                <h4 style={{ fontSize: '0.75rem', color: '#3b82f6', marginBottom: '8px', textTransform: 'uppercase' }}>Condition: Add SOC</h4>
+                                <p style={{ fontSize: '0.7rem', color: '#888', margin: 0 }}>
+                                    If Spin-Orbit Coupling is included, it becomes a <b style={{color: '#fff'}}>Topological Insulator</b> (Quantum Spin Hall phase).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -134,6 +174,7 @@ export default function GrapheneApp() {
                 flexShrink: 0
             }}>
                 <HaldaneControls state={state} />
+                <TopologicalLab />
             </div>
         </div>
     );

@@ -7,8 +7,11 @@ import { Search, Menu, X, ChevronRight, ChevronsUp } from 'lucide-react';
 
 const Sidebar = () => {
     const modules = [
-        { name: 'Introduction', path: '/learn' },
-        ...learnModules.map(m => ({ name: m.name, path: `/learn/${m.id}` }))
+        { name: 'Knowledge Hub', path: '/learn', icon: <ChevronRight size={14}/> },
+        { name: 'Visualizations', path: '/learn/visualizations', isHeader: true },
+        ...learnModules.map(m => ({ name: m.name, path: `/learn/visualizations/${m.id}`, isIndented: true })),
+        { name: 'Formulas', path: '/learn/formulas', isHeader: true },
+        { name: 'Research Papers', path: '/learn/papers', isHeader: true },
     ];
 
     const { width } = useWindowSize();
@@ -43,7 +46,7 @@ const Sidebar = () => {
                 color: 'var(--text-secondary)',
                 flexShrink: 0
             }}>
-                Modules
+                Navigation
             </h3>
 
             {/* Search Bar */}
@@ -53,7 +56,7 @@ const Sidebar = () => {
                 </div>
                 <input 
                     type="text" 
-                    placeholder="Search modules..." 
+                    placeholder="Search..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -71,7 +74,7 @@ const Sidebar = () => {
                 />
             </div>
 
-            <div className="custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, overflowY: 'auto' }}>
+            <div className="custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, overflowY: 'auto' }}>
                 {filteredModules.length > 0 ? (
                     filteredModules.map(mod => (
                         <NavLink 
@@ -79,25 +82,32 @@ const Sidebar = () => {
                             to={mod.path}
                             end={mod.path === '/learn'}
                             style={({ isActive }) => ({
-                                padding: isMobile ? '8px 16px' : '10px 12px',
+                                padding: mod.isHeader ? '15px 12px 5px 12px' : '8px 12px',
                                 borderRadius: '6px',
-                                backgroundColor: isActive ? 'var(--bg-color)' : 'transparent',
-                                color: isActive ? 'var(--accent-color)' : 'var(--text-color)',
-                                border: isActive ? '1px solid var(--border-color)' : '1px solid transparent',
-                                fontWeight: isActive ? '600' : 'normal',
-                                display: 'block',
-                                textAlign: isMobile ? 'center' : 'left',
+                                backgroundColor: isActive && !mod.isHeader ? 'var(--bg-color)' : 'transparent',
+                                color: mod.isHeader ? 'var(--text-secondary)' : (isActive ? 'var(--accent-color)' : 'var(--text-color)'),
+                                fontWeight: mod.isHeader ? 'bold' : (isActive ? '600' : 'normal'),
+                                fontSize: mod.isHeader ? '0.75rem' : '0.85rem',
+                                textTransform: mod.isHeader ? 'uppercase' : 'none',
+                                letterSpacing: mod.isHeader ? '1px' : 'normal',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                marginLeft: mod.isIndented ? '15px' : '0',
+                                borderLeft: mod.isIndented ? '1px solid var(--border-color)' : 'none',
+                                textDecoration: 'none',
                                 transition: 'all 0.2s',
-                                fontSize: '0.9rem',
-                                lineHeight: '1.4'
+                                cursor: mod.isHeader ? 'default' : 'pointer'
                             })}
+                            onClick={(e) => { if(mod.isHeader) e.preventDefault(); }}
                         >
+                            {mod.icon}
                             {mod.name}
                         </NavLink>
                     ))
                 ) : (
                     <div style={{ padding: '20px 10px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                        No modules found.
+                        No results.
                     </div>
                 )}
             </div>

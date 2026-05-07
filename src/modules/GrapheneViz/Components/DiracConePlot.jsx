@@ -4,9 +4,9 @@ export default function DiracConePlot({ calculateEnergy, mass }) {
     const canvasRef = useRef(null);
     const rotationRef = useRef({ x: 0.6, y: 0.5 });
 
-    const gridRes = 32;
+    const gridRes = 48; // Higher resolution for smoother curves
     // k_x for K point is ~2.42. kRange=3.5 captures all 6 K points.
-    const kRange = 3.5;
+    const kRange = 3.2; 
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -52,13 +52,6 @@ export default function DiracConePlot({ calculateEnergy, mass }) {
                 ctx.beginPath(); ctx.moveTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y); ctx.stroke();
             }
 
-            // 2. Draw 6 Dirac Points (K-points)
-            const kPoints = [
-                {x: 2.42, y: 0}, {x: -2.42, y: 0},
-                {x: 1.21, y: 2.1}, {x: -1.21, y: 2.1},
-                {x: 1.21, y: -2.1}, {x: -1.21, y: -2.1}
-            ];
-
             // 3. Draw Surfaces
             for (let i = 0; i <= gridRes; i++) {
                 ctx.beginPath();
@@ -83,17 +76,6 @@ export default function DiracConePlot({ calculateEnergy, mass }) {
                 }
                 ctx.strokeStyle = 'rgba(59, 130, 246, 0.35)'; // High-visibility blue
                 ctx.stroke();
-            }
-
-            // Dirac Point Glow (only if mass is low)
-            if (Math.abs(mass) < 0.2) {
-                const glow = (0.2 - Math.abs(mass)) * 50;
-                kPoints.forEach(kp => {
-                    const p = project(kp.x, kp.y, 0);
-                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glow);
-                    grad.addColorStop(0, 'rgba(16, 185, 129, 0.6)'); grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
-                    ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(p.x, p.y, glow, 0, Math.PI * 2); ctx.fill();
-                });
             }
 
             animationFrameId = requestAnimationFrame(draw);

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 export function useGrapheneState() {
     const [t1, setT1] = useState(1.0); // Nearest neighbor hopping
@@ -11,7 +11,7 @@ export function useGrapheneState() {
     const a2 = { x: -Math.sqrt(3)/2, y: 3/2 };
     
     // Calculate Energy Bands E(k) for the Haldane Model
-    const calculateEnergy = (kx, ky) => {
+    const calculateEnergy = useCallback((kx, ky) => {
         // Nearest neighbor terms (d_x, d_y)
         const arg1 = kx * a1.x + ky * a1.y;
         const arg2 = kx * a2.x + ky * a2.y;
@@ -29,9 +29,9 @@ export function useGrapheneState() {
         
         const magnitude = Math.sqrt(dx*dx + dy*dy + dz*dz) + 1e-9;
         return { conduction: magnitude, valence: -magnitude, dx, dy, dz };
-    };
+    }, [t1, t2, phi, mass, a1.x, a1.y, a2.x, a2.y]);
 
-    const calculateBerryCurvature = (kx, ky) => {
+    const calculateBerryCurvature = useCallback((kx, ky) => {
         const h = 0.001;
         const e0 = calculateEnergy(kx, ky);
         const ex = calculateEnergy(kx + h, ky);
@@ -53,7 +53,7 @@ export function useGrapheneState() {
         const mag = Math.sqrt(d[0]**2 + d[1]**2 + d[2]**2);
         
         return 0.5 * dot / (mag**3 + 1e-6);
-    };
+    }, [calculateEnergy]);
 
     const isTopological = useMemo(() => {
         // Haldane criterion: |M| < 3*sqrt(3) * t2 * |sin(phi)|

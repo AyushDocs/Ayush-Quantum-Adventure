@@ -1,53 +1,106 @@
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { NavLink } from 'react-router-dom';
+import { Layers, FileText, BookOpen, ChevronRight } from 'lucide-react';
 
 export default function LearnIndex() {
     const { width } = useWindowSize();
     const isMobile = width < 768;
 
     return (
-        <div style={{ maxWidth: '800px', padding: isMobile ? '1.5rem' : '3rem' }}>
-            <h1 style={{ 
-                fontSize: isMobile ? '1.8rem' : '2.8rem', 
-                fontWeight: '900',
-                letterSpacing: '-1.5px',
-                marginBottom: '1.5rem', 
-                color: 'var(--text-color)',
-                borderBottom: '1px solid var(--border-color)',
-                paddingBottom: '1rem'
-            }}>
-                System Modules
-            </h1>
-            
-            <div style={{ lineHeight: '1.8', color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-                <p style={{ marginBottom: '1.5rem' }}>
-                    Welcome to the core documentation and visualization suite. 
-                    These modules are designed not just to explain physics, but to <strong>model</strong> it—breaking down continuous natural phenomena into discrete, computable systems.
-                </p>
-
-                <p style={{ marginBottom: '2rem' }}>
-                    Each module represents a distinct physical system, built from first principles. 
-                    The goal is to explore how mathematical constraints (like the Schrödinger equation) shape physical reality, and how we can represent these constraints in code.
-                </p>
-
-                <div style={{ 
-                    background: 'var(--card-bg)', 
-                    padding: '2rem', 
-                    borderRadius: '8px', 
-                    borderLeft: '4px solid var(--accent-color)' 
+        <div style={{ maxWidth: '1000px', padding: isMobile ? '1.5rem' : '4rem', margin: '0 auto' }}>
+            <div style={{ marginBottom: '4rem' }}>
+                <h1 style={{ 
+                    fontSize: isMobile ? '2rem' : '3.5rem', 
+                    fontWeight: '900',
+                    letterSpacing: '-2px',
+                    marginBottom: '1rem', 
+                    color: 'var(--text-color)',
                 }}>
-                    <h3 style={{ marginTop: 0, color: 'var(--text-color)' }}>Current Focus: Diatomic Vibration</h3>
-                    <p style={{ margin: 0 }}>
-                        The first module (Diatomic CO) focuses on the <strong>Rigid Rotor</strong> and <strong>Harmonic Oscillator</strong> approximations. 
-                        It visualizes the interplay between angular momentum (l) and vibrational energy (v) in a simple two-body system.
-                    </p>
-                </div>
-
-                <h3 style={{ marginTop: '2.5rem', color: 'var(--text-color)' }}>Navigation</h3>
-                <p>
-                    Select a module from the sidebar to initialize the simulation environment. 
-                    Controls are provided to manipulate system parameters (quantum numbers, bond stiffness) in real-time.
+                    Knowledge <span style={{ color: 'var(--accent-color)' }}>Hub</span>
+                </h1>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '600px', lineHeight: '1.6' }}>
+                    Explore quantum phenomena through interactive simulations, deep mathematical derivations, and academic literature.
                 </p>
             </div>
+
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+                gap: '25px' 
+            }}>
+                <CategoryCard 
+                    to="/learn/visualizations"
+                    icon={<Layers size={32} />}
+                    title="Visualizations"
+                    desc="Interactive quantum labs and real-time physical simulations."
+                    color="var(--accent-color)"
+                />
+                <CategoryCard 
+                    to="/learn/formulas"
+                    icon={<FileText size={32} />}
+                    title="Formulas"
+                    desc="Step-by-step derivations of complex quantum mechanics equations."
+                    color="#3b82f6"
+                />
+                <CategoryCard 
+                    to="/learn/papers"
+                    icon={<BookOpen size={32} />}
+                    title="Research Papers"
+                    desc="Official academic papers with personal insights and summaries."
+                    color="#ec4899"
+                />
+            </div>
+
+            {/* Footer Note */}
+            <div style={{ marginTop: '5rem', padding: '2rem', borderTop: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                <p>Welcome to the core documentation and visualization suite. These modules are designed not just to explain physics, but to <strong>model</strong> it—breaking down continuous natural phenomena into discrete, computable systems.</p>
+            </div>
         </div>
+    );
+}
+
+function CategoryCard({ to, icon, title, desc, color }) {
+    return (
+        <NavLink 
+            to={to}
+            style={{
+                textDecoration: 'none',
+                display: 'block',
+                background: 'var(--card-bg)',
+                padding: '35px',
+                borderRadius: '24px',
+                border: '1px solid var(--border-color)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative',
+                overflow: 'hidden'
+            }}
+            className="category-card"
+        >
+            <div style={{ color: color, marginBottom: '20px' }}>{icon}</div>
+            <h3 style={{ color: 'var(--text-color)', fontSize: '1.4rem', marginBottom: '12px', fontWeight: 'bold' }}>{title}</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: 0 }}>{desc}</p>
+            
+            <div style={{ 
+                marginTop: '25px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                color: color, 
+                fontSize: '0.8rem', 
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+            }}>
+                Explore <ChevronRight size={14} />
+            </div>
+
+            <style>{`
+                .category-card:hover {
+                    transform: translateY(-10px);
+                    border-color: ${color};
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                }
+            `}</style>
+        </NavLink>
     );
 }
