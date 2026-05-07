@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import LondonEquationsViz from './LondonEquationsViz';
 
 export default function MeissnerLab({ temp, field, expulsion, isSuper, isVortex }) {
     const canvasRef = useRef(null);
@@ -40,11 +41,14 @@ export default function MeissnerLab({ temp, field, expulsion, isSuper, isVortex 
 
                 // Meissner Field Bending logic
                 if (isMeissner) {
-                    const distToDisc = Math.sqrt(lx * lx + lz * lz);
-                    if (distToDisc < 2.0 && Math.abs(ly + offset) < 1.0) {
-                        const push = (2.0 - distToDisc) * expulsion;
-                        lx += (lx / Math.max(0.1, distToDisc)) * push;
-                        lz += (lz / Math.max(0.1, distToDisc)) * push;
+                    const distToCenter = Math.sqrt(lx * lx + ly * ly + lz * lz);
+                    if (distToCenter < 2.5) {
+                        // Push field lines away from the sphere center
+                        const push = (2.5 - distToCenter) * expulsion;
+                        const factor = 1 + push / Math.max(0.1, distToCenter);
+                        lx *= factor;
+                        ly *= factor;
+                        lz *= factor;
                     }
                 }
 
@@ -76,19 +80,46 @@ export default function MeissnerLab({ temp, field, expulsion, isSuper, isVortex 
             ctx.fillStyle = '#050505';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // 1. Superconductor Disc
+            // 1. Superconductor Sphere
+            const sphereRadius = 2.0;
+            const lambda_pix = isSuper ? (0.2 + (temp / 1.0) * 0.5) : sphereRadius; // Scaled penetration depth
+            
+            // Draw Sphere Surface
             ctx.fillStyle = isSuper ? 'rgba(34, 211, 238, 0.05)' : 'rgba(255,255,255,0.02)';
             ctx.strokeStyle = isSuper ? '#22d3ee' : '#333';
             ctx.setLineDash(isSuper ? [] : [5, 5]);
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             
-            ctx.beginPath();
-            for (let i = 0; i <= 40; i++) {
-                const a = (i / 40) * Math.PI * 2;
-                const p = project(Math.cos(a) * 2.0, 0, Math.sin(a) * 2.0);
-                if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+            // Draw multiple rings for a 3D sphere effect
+            for (let rOffset = 0; rOffset < 3; rOffset++) {
+                ctx.beginPath();
+                const r = sphereRadius;
+                for (let i = 0; i <= 60; i++) {
+                    const a = (i / 60) * Math.PI * 2;
+                    let p;
+                    if (rOffset === 0) p = project(Math.cos(a) * r, Math.sin(a) * r, 0); // XY
+                    else if (rOffset === 1) p = project(Math.cos(a) * r, 0, Math.sin(a) * r); // XZ
+                    else p = project(0, Math.cos(a) * r, Math.sin(a) * r); // YZ
+                    
+                    if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
             }
-            ctx.stroke();
+
+            // Draw Penetration Glow (Exponential Decay)
+            if (isSuper) {
+                for (let i = 0; i < 10; i++) {
+                    const r = sphereRadius - (i * 0.1);
+                    const opacity = Math.exp(-i * 0.5) * 0.2; // Exponential falloff
+                    ctx.fillStyle = `rgba(34, 211, 238, ${opacity})`;
+                    ctx.beginPath();
+                    for (let a = 0; a <= Math.PI * 2; a += 0.2) {
+                        const p = project(Math.cos(a) * r, 0, Math.sin(a) * r);
+                        if (a === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.fill();
+                }
+            }
             ctx.setLineDash([]);
 
             // 2. The Magnet (Levitating)
@@ -141,17 +172,34 @@ export default function MeissnerLab({ temp, field, expulsion, isSuper, isVortex 
 
     return (
         <div style={{ background: '#050505', padding: '30px', borderRadius: '32px', border: '1px solid #1a1a1a', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: '25px', left: '25px', zIndex: 10 }}>
-                <h4 style={{ color: '#22d3ee', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>
-                    Mag-Lev & Flux Lab
-                </h4>
-            </div>
-            <canvas ref={canvasRef} width={600} height={450} style={{ width: '100%', cursor: 'crosshair' }} />
-            {isVortex && (
-                <div style={{ position: 'absolute', bottom: '20px', right: '30px', background: 'rgba(251,191,36,0.1)', padding: '10px 15px', borderRadius: '12px', border: '1px solid #fbbf24' }}>
-                   <span style={{ color: '#fbbf24', fontSize: '0.65rem', fontWeight: 'bold' }}>QUANTIZED VORTICES DETECTED</span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '20px', alignItems: 'start' }}>
+                <div style={{ position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '0px', left: '0px', zIndex: 10 }}>
+                        <h4 style={{ color: '#22d3ee', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>
+                            Mag-Lev & Flux Lab
+                        </h4>
+                    </div>
+                    <canvas ref={canvasRef} width={600} height={450} style={{ width: '100%', cursor: 'crosshair', borderRadius: '24px', background: '#080808' }} />
+                    {isVortex && (
+                        <div style={{ position: 'absolute', bottom: '20px', right: '30px', background: 'rgba(251,191,36,0.1)', padding: '10px 15px', borderRadius: '12px', border: '1px solid #fbbf24' }}>
+                           <span style={{ color: '#fbbf24', fontSize: '0.65rem', fontWeight: 'bold' }}>QUANTIZED VORTICES DETECTED</span>
+                        </div>
+                    )}
                 </div>
-            )}
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '24px', border: '1px solid #1a1a1a' }}>
+                        <h4 style={{ color: '#aaa', fontSize: '0.65rem', textTransform: 'uppercase', marginBottom: '10px' }}>Quick Stats</h4>
+                        <div style={{ fontSize: '0.8rem', color: isSuper ? '#22d3ee' : '#f43f5e', fontWeight: 'bold' }}>
+                            {isSuper ? 'B-Field Expelled' : 'B-Field Penetrating'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '5px' }}>
+                            Levitation Force: {isSuper ? (expulsion * 100).toFixed(0) : 0}%
+                        </div>
+                    </div>
+                    <LondonEquationsViz temp={temp} isSuper={isSuper} />
+                </div>
+            </div>
         </div>
     );
 }

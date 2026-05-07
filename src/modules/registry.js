@@ -20,6 +20,8 @@ import symmetryConfig from './Symmetry_Viz/module.config';
 import thinFilmConfig from './ThinFilm_Lab/module.config';
 import ramanConfig from './Raman_Viz/module.config';
 import aharonovBohmConfig from './AharonovBohm_Viz/module.config';
+import eprConfig from './EPR_Viz/module.config';
+import excitonConfig from './ExcitonLab/module.config';
 
 export const learnModules = [
   // Fundamentals & Spectroscopy
@@ -29,6 +31,7 @@ export const learnModules = [
   
   // Quantum Effects & Phases
   aharonovBohmConfig,
+  eprConfig,
   berryConfig,
   symmetryConfig,
   
@@ -41,6 +44,7 @@ export const learnModules = [
   fermiLiquidConfig,
   superfluidConfig,
   superconductorConfig,
+  excitonConfig,
   ybcoConfig,
   andreevConfig,
   

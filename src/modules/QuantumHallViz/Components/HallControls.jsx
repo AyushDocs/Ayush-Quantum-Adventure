@@ -6,6 +6,7 @@ export default function HallControls({ state }) {
         density, setDensity, 
         temperature, setTemperature, 
         showEdgeStates, setShowEdgeStates,
+        isFractional, setIsFractional,
         chernNumber 
     } = state;
 
@@ -117,6 +118,20 @@ export default function HallControls({ state }) {
                         />
                         Highlight Edge Percolation
                     </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', color: '#fbbf24', cursor: 'pointer', marginTop: '10px' }}>
+                        <input 
+                            type="checkbox" 
+                            checked={isFractional} 
+                            onChange={(e) => setIsFractional(e.target.checked)}
+                            style={{ width: '16px', height: '16px', accentColor: '#fbbf24' }}
+                        />
+                        Enable Fractional Regime (FQHE)
+                    </label>
+                    {isFractional && (
+                        <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '5px', fontStyle: 'italic' }}>
+                            Observing <b>Composite Fermions</b>: Electrons bound to quantized magnetic flux tubes.
+                        </p>
+                    )}
                 </div>
             </div>
 

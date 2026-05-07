@@ -39,8 +39,7 @@ export default function PhaseDiagram({ state }) {
     ];
 
     const layout = {
-        width: 340,
-        height: 220,
+        autosize: true,
         margin: { l: 40, r: 10, b: 40, t: 30 },
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'rgba(0,0,0,0.2)',
@@ -107,6 +106,7 @@ export default function PhaseDiagram({ state }) {
                 layout={layout}
                 onClick={handlePointerAction}
                 onRelayout={handlePointerAction}
+                useResizeHandler={true}
                 config={{ 
                     displayModeBar: false, 
                     staticPlot: false,
@@ -114,7 +114,7 @@ export default function PhaseDiagram({ state }) {
                     scrollZoom: false,
                     dragmode: 'select'
                 }}
-                style={{ width: '100%', cursor: 'crosshair' }}
+                style={{ width: '100%', height: '220px', cursor: 'crosshair' }}
             />
             <p style={{ fontSize: '0.65rem', color: '#666', marginTop: '6px', textAlign: 'center', fontStyle: 'italic' }}>
                 Click or drag on the map to jump between phases

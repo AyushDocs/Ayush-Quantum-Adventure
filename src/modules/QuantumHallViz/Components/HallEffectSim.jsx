@@ -14,11 +14,12 @@ const generateLandscape = () => {
 };
 const STATIC_LANDSCAPE = generateLandscape();
 
-export default function HallEffectSim({ bField, chernNumber, disorderStrength, temperature = 0.1 }) {
+export default function HallEffectSim({ bField, chernNumber, disorderStrength, temperature = 0.1, isFractional }) {
     const canvasRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [hallFieldY, setHallFieldY] = useState(0); 
     const [impurities, setImpurities] = useState([]);
+    const timeRef = useRef(0);
     
     const dt = 0.45;
     const E_FIELD_X = 0.07; 
@@ -94,6 +95,7 @@ export default function HallEffectSim({ bField, chernNumber, disorderStrength, t
 
         const draw = () => {
             if (!isPlaying) { animationFrameId = requestAnimationFrame(draw); return; }
+            timeRef.current += 0.05;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const barW = canvas.width - 100, barH = 160;
@@ -119,7 +121,7 @@ export default function HallEffectSim({ bField, chernNumber, disorderStrength, t
             const B = bField * 0.45;
             const EX = E_FIELD_X, EY = hallFieldY;
 
-            particles.current.forEach(p => {
+            particles.current.forEach((p, i) => {
                 const { fx, fy } = getPotentialForce(p.x, p.y);
                 const noise = temperature * 1.5;
                 const ax = (EX - p.vy*B + fx + (Math.random()-0.5)*noise) - p.vx/TAU;
@@ -142,6 +144,25 @@ export default function HallEffectSim({ bField, chernNumber, disorderStrength, t
                 }); ctx.stroke();
                 ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
                 ctx.fillStyle = p.color; ctx.fill();
+
+                // Draw Composite Fermion Flux Tubes
+                if (isFractional) {
+                    ctx.strokeStyle = '#fbbf24'; // Gold for flux
+                    ctx.lineWidth = 1;
+                    const fluxAngle = timeRef.current * 2 + i;
+                    for (let f = 0; f < 2; f++) {
+                        const ang = fluxAngle + f * Math.PI;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x + Math.cos(ang) * 10, p.y + Math.sin(ang) * 10);
+                        ctx.stroke();
+                        // Tiny arrow head
+                        ctx.beginPath();
+                        ctx.arc(p.x + Math.cos(ang) * 10, p.y + Math.sin(ang) * 10, 1.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.fill();
+                    }
+                }
             });
 
             setHallFieldY(prev => prev + ((-netDisplacementY * 0.2) - prev) * 0.1);

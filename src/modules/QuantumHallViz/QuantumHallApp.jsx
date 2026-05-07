@@ -65,6 +65,7 @@ export default function QuantumHallApp() {
                         chernNumber={state.chernNumber}
                         disorderStrength={state.disorderStrength}
                         temperature={state.temperature}
+                        isFractional={state.isFractional}
                     />
                 </div>
 
