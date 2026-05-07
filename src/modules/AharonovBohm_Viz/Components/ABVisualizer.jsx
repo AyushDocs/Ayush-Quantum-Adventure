@@ -37,10 +37,23 @@ const ABVisualizer = ({ flux, splitDistance, showAField, phaseShift }) => {
   }, [showAField, solenoidRadius]);
 
   return (
-    <div className="w-full h-full min-h-[500px] flex items-center justify-center bg-gradient-to-br from-[#0a0a0c] to-[#1a1a20]">
+    <div style={{
+      width: '100%',
+      height: '100%',
+      minHeight: '500px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(to bottom right, #0a0a0c, #1a1a20)'
+    }}>
       <svg 
         viewBox={`0 0 ${width} ${height}`} 
-        className="w-full h-auto max-h-[600px] drop-shadow-2xl"
+        style={{
+          width: '100%',
+          height: 'auto',
+          maxHeight: '600px',
+          filter: 'drop-shadow(0 25px 25px rgba(0, 0, 0, 0.5))'
+        }}
       >
         <defs>
           <linearGradient id="solenoidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -161,7 +174,7 @@ const ABVisualizer = ({ flux, splitDistance, showAField, phaseShift }) => {
           y={centerY + solenoidRadius + 25} 
           textAnchor="middle" 
           fill="#60a5fa" 
-          className="text-sm font-bold font-mono"
+          style={{ fontSize: '14px', fontWeight: 'bold', fontFamily: 'monospace' }}
         >
           Φ = {flux.toFixed(2)} Φ₀
         </text>
@@ -170,7 +183,7 @@ const ABVisualizer = ({ flux, splitDistance, showAField, phaseShift }) => {
           y={centerY + solenoidRadius + 45} 
           textAnchor="middle" 
           fill="#3b82f6" 
-          className="text-xs font-mono opacity-60"
+          style={{ fontSize: '12px', fontFamily: 'monospace', opacity: 0.6 }}
         >
           B {flux !== 0 ? '≠' : '='} 0 (INSIDE)
         </text>
@@ -179,7 +192,7 @@ const ABVisualizer = ({ flux, splitDistance, showAField, phaseShift }) => {
           y={centerY - 150} 
           textAnchor="middle" 
           fill="#fbbf24" 
-          className="text-xs font-mono opacity-80"
+          style={{ fontSize: '12px', fontFamily: 'monospace', opacity: 0.8 }}
         >
           B = 0 (OUTSIDE)
         </text>
