@@ -23,7 +23,7 @@ export default function Visualizations() {
                         to={`/learn/visualizations/${m.id}`}
                         style={{
                             textDecoration: 'none',
-                            background: 'rgba(255,255,255,0.02)',
+                            background: 'var(--card-bg)',
                             padding: '30px',
                             borderRadius: '24px',
                             border: '1px solid var(--border-color)',
@@ -31,17 +31,17 @@ export default function Visualizations() {
                         }}
                         className="module-card"
                     >
-                        <div style={{ color: m.color || 'var(--accent-color)', marginBottom: '15px' }}>
+                        <div style={{ color: m.color || m.themeColor || 'var(--accent-color)', marginBottom: '15px' }}>
                             {m.icon ? <m.icon size={24} /> : <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid' }} />}
                         </div>
-                        <h4 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '10px' }}>{m.name}</h4>
-                        <p style={{ color: '#666', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>{m.description}</p>
+                        <h4 style={{ color: 'var(--text-color)', fontSize: '1.2rem', marginBottom: '10px', fontWeight: 'bold' }}>{m.name}</h4>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>{m.description}</p>
                         
                         <style>{`
                             .module-card:hover {
-                                background: rgba(255,255,255,0.05);
                                 transform: translateY(-5px);
-                                border-color: ${m.color || 'var(--accent-color)'};
+                                border-color: ${m.color || m.themeColor || 'var(--accent-color)'};
+                                box-shadow: 0 10px 25px rgba(0,0,0,0.08);
                             }
                         `}</style>
                     </NavLink>
