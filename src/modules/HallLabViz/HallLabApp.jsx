@@ -95,7 +95,7 @@ export default function HallLabApp() {
             showElectric={state.showElectric}
             animating={state.animating}
             thickness={state.thickness}
-            width={state.width}
+            area={state.area}
             carrierDensity={state.carrierDensity}
             mobility={state.mobility}
             hallAngle={state.hallAngle}

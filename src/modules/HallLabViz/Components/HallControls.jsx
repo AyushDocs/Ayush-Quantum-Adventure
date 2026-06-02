@@ -30,28 +30,31 @@ function SliderGroup({ label, value, onChange, min, max, step, format }) {
   );
 }
 
-function ToggleGroup({ label, value, onToggle, trueLabel, falseLabel, accent }) {
+function ToggleGroup({ label, value, onToggle, trueLabel, falseLabel, accent, disabled }) {
+  const handleClick = (val) => {
+    if (!disabled) onToggle(val);
+  };
   return (
-    <div style={{ marginBottom: '14px' }}>
+    <div style={{ marginBottom: '14px', opacity: disabled ? 0.5 : 1 }}>
       <div style={{ color: C.muted, fontSize: '0.78rem', marginBottom: '5px' }}>{label}</div>
       <div style={{
         display: 'flex', background: '#eeeae2',
         borderRadius: '8px', overflow: 'hidden',
         border: `1px solid ${C.border}`,
       }}>
-        <button onClick={() => onToggle(true)}
+        <button onClick={() => handleClick(true)} disabled={disabled}
           style={{
             flex: 1, padding: '8px', border: 'none',
             background: value ? (accent || '#15803d') : 'transparent',
-            color: value ? '#fff' : C.muted, cursor: 'pointer',
+            color: value ? '#fff' : C.muted, cursor: disabled ? 'not-allowed' : 'pointer',
             fontSize: '0.78rem', fontWeight: value ? 'bold' : 'normal',
             transition: 'all 0.2s',
           }}>{trueLabel}</button>
-        <button onClick={() => onToggle(false)}
+        <button onClick={() => handleClick(false)} disabled={disabled}
           style={{
             flex: 1, padding: '8px', border: 'none',
             background: !value ? (accent || '#7c3aed') : 'transparent',
-            color: !value ? '#fff' : C.muted, cursor: 'pointer',
+            color: !value ? '#fff' : C.muted, cursor: disabled ? 'not-allowed' : 'pointer',
             fontSize: '0.78rem', fontWeight: !value ? 'bold' : 'normal',
             transition: 'all 0.2s',
           }}>{falseLabel}</button>
@@ -135,9 +138,9 @@ export default function HallControls({ state }) {
         <SliderGroup label="Thickness t (mm)" value={state.thickness * 1000}
           onChange={v => state.setThickness(v / 1000)} min={0.1} max={5} step={0.1}
           format={v => (v / 1000).toExponential(2)} />
-        <SliderGroup label="Width w (mm)" value={state.width * 1000}
-          onChange={v => state.setWidth(v / 1000)} min={1} max={20} step={0.5}
-          format={v => (v / 1000).toExponential(2)} />
+        <SliderGroup label="Area A (mm²)" value={state.area * 1e6}
+          onChange={v => state.setArea(v / 1e6)} min={1} max={20} step={0.5}
+          format={v => (v / 1e6).toExponential(2)} />
       </div>
 
       <div style={{
@@ -148,8 +151,9 @@ export default function HallControls({ state }) {
         <div style={{ color: C.muted, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
           Display Options
         </div>
-        <ToggleGroup label="Show Magnetic Force" value={state.showMagnetic}
-          onToggle={state.setShowMagnetic} trueLabel="Show" falseLabel="Hide" accent="#7c3aed" />
+        <ToggleGroup label="Show Magnetic Force" value={state.bField <= 0.01 ? false : state.showMagnetic}
+          onToggle={state.setShowMagnetic} trueLabel="Show" falseLabel="Hide" accent="#7c3aed"
+          disabled={state.bField <= 0.01} />
         <ToggleGroup label="Show Electric Force" value={state.showElectric}
           onToggle={state.setShowElectric} trueLabel="Show" falseLabel="Hide" accent="#15803d" />
       </div>

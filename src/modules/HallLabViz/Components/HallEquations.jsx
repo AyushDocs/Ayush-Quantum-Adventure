@@ -46,9 +46,23 @@ export default function HallEquations({ state }) {
   return (
     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
       <div style={colStyle}>
-        <Section label="Applied Longitudinal Field">
+        <Section label="Applied Longitudinal Field & Current">
           <Block math={"E_{\\text{long}} = \\frac{V}{L}"} />
-          <div style={note}>Drives current I along the bar; establishes drift velocity</div>
+          <div style={note}>Drives current <Inline math={"I"} /> along the bar; establishes drift velocity <Inline math={"v_d"} />:</div>
+          <Block math={"I = n\\,q\\,A\\,v_d"} />
+          <div style={note}>
+            <span style={{ fontWeight: 'bold', color: C.accent }}>Density-Speed Relation:</span> For a constant current <Inline math={"I"} />, since <Inline math={"v_d = \\frac{I}{n\\,q\\,A}"} />, decreasing the carrier density <Inline math={"n"} /> forces the individual carriers to drift faster (<Inline math={"v_d \\propto 1/n"} />) to maintain the same total current.
+          </div>
+        </Section>
+
+        <Section label="Drift Velocity vs Mobility" borderColor={C.orange}>
+          <Block math={"v_d = \\mu \\, E_{\\text{long}}"} />
+          <div style={note}>
+            <span style={{ fontWeight: 'bold', color: C.orange }}>Mobility-Speed Relation:</span> Drift velocity <Inline math={"v_d"} /> is directly proportional to mobility <Inline math={"\\mu"} /> under a constant longitudinal field <Inline math={"E_{\\text{long}}"} />.
+          </div>
+          <div style={note}>
+            Higher mobility reduces the scattering resistance, enabling carriers to accelerate to a higher velocity in a given electric field.
+          </div>
         </Section>
 
         <Section label="Drude Equation of Motion" borderColor={C.red}>

@@ -5,7 +5,7 @@ const CHARGE = 1.602e-19;
 const M0 = 9.11e-31;
 
 const DEFAULTS = {
-  B: 0.5, I: 1.0, n: 1.0, mu: 1.0, t: 1.0, w: 10, type: 'e', bsign: 1,
+  B: 0.5, I: 1.0, n: 1.0, mu: 1.0, t: 1.0, a: 10, type: 'e', bsign: 1,
 };
 
 export default function useHallLabState() {
@@ -22,7 +22,7 @@ export default function useHallLabState() {
   const [bSign, setBSign] = useState(() => p('bsign', DEFAULTS.bsign));
   const [current, setCurrent] = useState(() => p('I', DEFAULTS.I));
   const [thickness, setThickness] = useState(() => p('t', DEFAULTS.t) * 1e-3);
-  const [width, setWidth] = useState(() => p('w', DEFAULTS.w) * 1e-3);
+  const [area, setArea] = useState(() => p('a', DEFAULTS.a) * 1e-6);
   const [carrierDensity, setCarrierDensity] = useState(() => p('n', DEFAULTS.n) * 1e23);
   const [carrierType, setCarrierType] = useState(() => p('type', DEFAULTS.type) === 'h' ? 'hole' : 'electron');
   const [mobility, setMobility] = useState(() => p('mu', DEFAULTS.mu));
@@ -76,13 +76,13 @@ export default function useHallLabState() {
     f(carrierDensity / 1e23, DEFAULTS.n, 'n', 2);
     f(mobility, DEFAULTS.mu, 'mu', 2);
     f(thickness * 1000, DEFAULTS.t, 't', 1);
-    f(width * 1000, DEFAULTS.w, 'w', 1);
+    f(area * 1e6, DEFAULTS.a, 'a', 1);
     if (carrierType !== 'electron') q.set('type', 'h');
     if (bSign !== 1) q.set('bsign', String(bSign));
     const qstr = q.toString();
     const cur = searchParams.toString();
     if (qstr !== cur) setSearchParams(q, { replace: true });
-  }, [bField, current, carrierDensity, mobility, thickness, width, carrierType, bSign]);
+  }, [bField, current, carrierDensity, mobility, thickness, area, carrierType, bSign]);
 
   const direction = useMemo(() => carrierType === 'electron' ? 'ltr' : 'rtl', [carrierType]);
 
@@ -125,18 +125,26 @@ export default function useHallLabState() {
     return cyclotronFreq * meanFreeTime;
   }, [cyclotronFreq, meanFreeTime]);
 
-  const lorentzForce = useMemo(() => {
-    const driftV = current / (carrierDensity * CHARGE * thickness * width);
-    return q * driftV * bEff;
-  }, [current, bEff, carrierDensity, thickness, width, q]);
+  const E_long = useMemo(() => {
+    const mu_ref = 1.0;
+    return current / (carrierDensity * CHARGE * area * mu_ref);
+  }, [current, carrierDensity, area]);
 
   const driftVelocity = useMemo(() => {
-    return current / (carrierDensity * CHARGE * thickness * width);
-  }, [current, carrierDensity, thickness, width]);
+    return mobility * E_long;
+  }, [mobility, E_long]);
+
+  const lorentzForce = useMemo(() => {
+    return q * driftVelocity * bEff;
+  }, [q, driftVelocity, bEff]);
 
   const sheetDensity = useMemo(() => {
     return carrierDensity * thickness;
   }, [carrierDensity, thickness]);
+
+  const width = useMemo(() => {
+    return area / thickness;
+  }, [area, thickness]);
 
   const detectedType = useMemo(() => {
     return hallCoeff > 0 ? 'Hole (p-type)' : 'Electron (n-type)';
@@ -155,14 +163,12 @@ export default function useHallLabState() {
   const rho_xy = useMemo(() => -omegaCtau / sigma0, [sigma0, omegaCtau]);
 
   const cyclotronRadius = useMemo(() => {
-    const v = current / (carrierDensity * CHARGE * thickness * width);
-    return effectiveMass * Math.abs(v) / (CHARGE * bField);
-  }, [current, carrierDensity, thickness, width, effectiveMass, bField]);
+    return effectiveMass * Math.abs(driftVelocity) / (CHARGE * bField);
+  }, [driftVelocity, effectiveMass, bField]);
 
   const kineticEnergy = useMemo(() => {
-    const v = current / (carrierDensity * CHARGE * thickness * width);
-    return 0.5 * effectiveMass * v * v;
-  }, [current, carrierDensity, thickness, width, effectiveMass]);
+    return 0.5 * effectiveMass * driftVelocity * driftVelocity;
+  }, [driftVelocity, effectiveMass]);
 
   const regime = useMemo(() => {
     if (omegaCtau < 0.3) return 'scattering-dominated (ω_cτ ≪ 1) — carriers scatter before completing a cyclotron orbit';
@@ -175,7 +181,7 @@ export default function useHallLabState() {
     bField, setBField, bSign, setBSign, toggleBSign,
     current, setCurrent,
     thickness, setThickness,
-    width, setWidth,
+    area, setArea,
     carrierDensity, setCarrierDensity,
     carrierType, setCarrierType, toggleCarrierType,
     mobility, setMobility,
@@ -186,8 +192,8 @@ export default function useHallLabState() {
     autoBalance, setAutoBalance,
     effectiveMass, meanFreeTime, cyclotronFreq, cyclotronRadius, kineticEnergy,
     hallVoltage, hallCoeff, conductivity, resistivity,
-    hallAngle, lorentzForce, driftVelocity,
-    sheetDensity, detectedType, hallMobility,
+    hallAngle, lorentzForce, E_long, driftVelocity,
+    sheetDensity, width, detectedType, hallMobility,
     omegaCtau, bEff, sigma0,
     sigma_xx, sigma_xy, rho_xx, rho_xy, regime,
   };

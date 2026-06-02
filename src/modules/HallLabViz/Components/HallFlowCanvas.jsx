@@ -28,7 +28,8 @@ const C = {
 export default function HallFlowCanvas({
   carrierType, bField, bSign, current,
   showMagnetic, showElectric, animating,
-  thickness, width, carrierDensity,
+  thickness, area, carrierDensity,
+  mobility,
   hallAngle, omegaCtau, hallBalance = 1.0,
 }) {
   const timeRef = useRef(0);
@@ -54,23 +55,36 @@ export default function HallFlowCanvas({
 
   const W = 700, H = 320;
   const barLeft = 50, barRight = W - 50;
-  const barTop = 60, barBottom = H - 60;
   const barMidX = (barLeft + barRight) / 2;
-  const barMidY = (barTop + barBottom) / 2;
-  const barH = barBottom - barTop;
+  const barMidY = H / 2;
 
-  const carriers = useMemo(() => {
-    const count = 40;
-    return Array.from({ length: count }, (_, i) => ({
-      offset: i / count,
-      col: i % 8,
-      speed: 0.7 + Math.random() * 0.6,
-    }));
+  const areaNormalized = area / 10e-6; // 1.0 at default (10 mm²)
+  const barH = 150 + 50 * areaNormalized;
+  const barTop = barMidY - barH / 2;
+  const barBottom = barMidY + barH / 2;
+
+  const staticCarriers = useMemo(() => {
+    const maxCount = 100;
+    return Array.from({ length: maxCount }, (_, i) => {
+      const hash1 = Math.abs(Math.sin(i * 12.9898 + 78.233) * 43758.5453) % 1;
+      const hash2 = Math.abs(Math.sin(i * 4.1414 + 13.3713) * 23147.21) % 1;
+      return {
+        offset: hash1,
+        col: i % 8,
+        speed: 0.7 + hash2 * 0.6,
+      };
+    });
   }, []);
+
+  const nNormalized = carrierDensity / 1e23;
+  const count = Math.max(5, Math.min(100, Math.round(40 * Math.sqrt(nNormalized))));
+  const carriers = useMemo(() => {
+    return staticCarriers.slice(0, count);
+  }, [staticCarriers, count]);
 
   const dir = carrierType === 'electron' ? 1 : -1;
   const span = barRight - barLeft - 40;
-  const speedNorm = current / (carrierDensity / 1e23) / (thickness * 1000) / (width * 1000);
+  const speedNorm = (current / (carrierDensity / 1e23) / (area * 1e6)) * mobility;
   const baseSpeed = 1.5 + speedNorm * 3.0;
   const isElectron = carrierType === 'electron';
 
@@ -82,10 +96,6 @@ export default function HallFlowCanvas({
   const maxDriftPx = barH * 0.4;
   const rawTotalDrift = theta * driftScale;
   const totalDrift = Math.min(rawTotalDrift, maxDriftPx);
-
-  const regimeLabel = wct < 0.3 ? 'Drift regime (ω_cτ ≪ 1)' :
-    wct < 0.8 ? 'Hall angle drift (ω_cτ ~ 1)' :
-    'Cyclotron regime (ω_cτ ≫ 1)';
 
   const deflectDir = bSign * (bField > 0.01 ? 1 : 0);
   const bOut = bSign > 0;
@@ -105,10 +115,10 @@ export default function HallFlowCanvas({
       {/* Hall voltage probes */}
       <rect x={barMidX - 8} y={barTop - 15} width={16} height={15}
         fill={C.green} opacity={0.2} rx={2} />
-      <text x={barMidX - 4} y={barTop - 3} textAnchor="end" fill={C.green} fontSize={9} fontWeight="bold">+</text>
+      <text x={barMidX} y={barTop - 7} textAnchor="middle" alignmentBaseline="central" fill={C.green} fontSize={9} fontWeight="bold">+</text>
       <rect x={barMidX - 8} y={barBottom} width={16} height={15}
         fill={C.green} opacity={0.2} rx={2} />
-      <text x={barMidX + 4} y={barBottom + 11} textAnchor="start" fill={C.green} fontSize={9} fontWeight="bold">−</text>
+      <text x={barMidX} y={barBottom + 8} textAnchor="middle" alignmentBaseline="central" fill={C.green} fontSize={9} fontWeight="bold">−</text>
 
       <text x={barMidX} y={barTop - 22} textAnchor="middle" fill={C.green} fontSize={10} fontWeight="bold">
         V<tspan baselineShift="sub" fontSize="6.5">H</tspan>
@@ -228,19 +238,21 @@ export default function HallFlowCanvas({
         <g transform={`translate(${barMidX - 60}, ${barBottom + 18})`}>
           <rect x={0} y={0} width={200} height={18} rx={3}
             fill={C.barGrad1} stroke={C.barStroke} strokeWidth={0.5} opacity={0.85} />
-          <text x={100} y={13} textAnchor="middle" fill={C.text} fontSize={8}>
-            {regimeLabel}
+          <text x={100} y={12} textAnchor="middle" fill={C.text} fontSize={8}>
+            {wct < 0.3 ? 'Drift regime ' : wct < 0.8 ? 'Hall angle drift ' : 'Cyclotron regime '}
+            (ω<tspan fontSize={6} baselineShift="sub">c</tspan>τ
+            {wct < 0.3 ? ' ≪ 1)' : wct < 0.8 ? ' ~ 1)' : ' ≫ 1)'}
           </text>
         </g>
       )}
 
       {bField > 0.01 && deflectDir !== 0 && (
-        <g transform={`translate(${barLeft + 60}, ${barMidY + 30})`}>
-          <line x1={0} y1={0} x2={55} y2={55 * (totalDrift / span) * deflectDir * (1 - hallBalance)}
+        <g transform={`translate(${dir > 0 ? barLeft + 60 : barRight - 60}, ${barMidY + 30})`}>
+          <line x1={0} y1={0} x2={55 * dir} y2={55 * (totalDrift / span) * deflectDir * (1 - hallBalance)}
             stroke={C.accent} strokeWidth={1.5} opacity={0.6} />
           <polygon points={`0,-3 6,0 0,3`} fill={C.accent} opacity={0.6}
-            transform={`translate(55, ${55 * (totalDrift / span) * deflectDir * (1 - hallBalance)}) rotate(${Math.atan2(55 * (totalDrift / span) * deflectDir * (1 - hallBalance), 55) * 180 / Math.PI})`} />
-          <text x={28} y={55 * (totalDrift / span) * deflectDir * (1 - hallBalance) + (deflectDir > 0 ? 10 : -6)}
+            transform={`translate(${55 * dir}, ${55 * (totalDrift / span) * deflectDir * (1 - hallBalance)}) rotate(${Math.atan2(55 * (totalDrift / span) * deflectDir * (1 - hallBalance), 55 * dir) * 180 / Math.PI})`} />
+          <text x={28 * dir} y={55 * (totalDrift / span) * deflectDir * (1 - hallBalance) + (deflectDir > 0 ? 10 : -6)}
             textAnchor="middle" fill={C.accent} fontSize={7}>drift</text>
         </g>
       )}

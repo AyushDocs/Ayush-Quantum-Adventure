@@ -25,6 +25,8 @@ export default function CarrierAnalysis({ state }) {
     { label: 'Detected Type (from R_H)', value: state.detectedType, color: '#15803d', plain: true },
     { label: 'Carrier Density (n)', value: state.carrierDensity.toExponential(3) + ' m⁻³', plain: true },
     { label: 'Sheet Density (n_s)', value: state.sheetDensity.toExponential(3) + ' m⁻²', plain: true },
+    { label: 'Cross-sectional Area (A)', value: state.area.toExponential(3) + ' m²', plain: true },
+    { label: 'Calculated Width (w = A/t)', value: state.width.toExponential(3) + ' m', plain: true },
     { label: 'Effective Mass (m*)', value: (state.effectiveMass / 9.11e-31).toFixed(2) + ' m_e', plain: true },
     { label: 'Mean Free Time (τ)', value: state.meanFreeTime.toExponential(3) + ' s', plain: true },
     { label: 'Hall Coefficient (R_H)', value: state.hallCoeff.toExponential(3) + ' m³/C', plain: true },
@@ -43,6 +45,7 @@ export default function CarrierAnalysis({ state }) {
     { label: 'Kinetic Energy (½m*v²)', value: state.kineticEnergy.toExponential(3) + ' J', plain: true },
     { label: 'Hall Angle (θ_H)', value: (state.hallAngle * 180 / Math.PI).toFixed(2) + '°', plain: true },
     { label: 'Drift Velocity (v_d)', value: state.driftVelocity.toExponential(3) + ' m/s', plain: true },
+    { label: 'Longitudinal Field (E_long)', value: state.E_long.toExponential(3) + ' V/m', plain: true },
     { label: 'Transport Regime', value: state.omegaCtau < 0.3 ? 'Scattering-dominated' : state.omegaCtau < 0.8 ? 'Intermediate' : 'High-field (cyclotron)', color: state.omegaCtau < 0.3 ? '#dc2626' : state.omegaCtau < 0.8 ? '#ca8a04' : '#7c3aed', plain: true },
   ];
 

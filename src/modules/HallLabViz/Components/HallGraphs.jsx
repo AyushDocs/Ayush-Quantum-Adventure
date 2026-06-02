@@ -33,8 +33,9 @@ export default function HallGraphs({ state }) {
     linecolor: gridColor,
     linewidth: 1,
     mirror: false,
-    exponentformat: 'SI',
-    showexponent: 'all',
+    exponentformat: 'power',
+    showexponent: 'first',
+    tickformat: '.1e',
     tickangle: 0,
   };
 
@@ -81,16 +82,28 @@ export default function HallGraphs({ state }) {
     return { bVals, vH, angle, sigma_xx, sigma_xy, omegaTau };
   }, [state.carrierType, state.current, state.carrierDensity, state.thickness, state.effectiveMass, state.meanFreeTime, state.sigma0]);
 
+  const muRange = useMemo(() => {
+    const points = 80;
+    const muVals = [];
+    const vdVals = [];
+    const mu_ref = 1.0;
+    const E_long = state.current / (state.carrierDensity * CHARGE * state.area * mu_ref);
+    for (let i = 0; i < points; i++) {
+      const mu = 0.01 + i * (2.0 / points);
+      muVals.push(mu);
+      vdVals.push(mu * E_long);
+    }
+    return { muVals, vdVals };
+  }, [state.current, state.carrierDensity, state.area]);
+
   const makeYAxis = (title) => ({
     ...axis,
     title: { text: title, standoff: 16, font: { size: 13, color: C.text } },
-    tickformat: '.1e',
   });
 
   const makeXAxis = (title) => ({
     ...axis,
     title: { text: title, standoff: 16, font: { size: 13, color: C.text } },
-    tickformat: '.1e',
   });
 
   const makePlot = (data, title, xTitle, yTitle, height = 240) => (
@@ -178,6 +191,31 @@ export default function HallGraphs({ state }) {
           '\u03c9<sub>c</sub>\u03c4 vs Magnetic Field \u2014 Transport Regime',
           'Magnetic Field B (T)',
           '\u03c9<sub>c</sub>\u03c4 (dimensionless)',
+        )}
+      </div>
+
+      <div style={{
+        background: C.bg,
+        borderRadius: '16px',
+        padding: '12px 16px 8px',
+        border: `1px solid ${C.border}`,
+      }}>
+        {makePlot(
+          [
+            makeTrace(muRange.muVals, muRange.vdVals, 'Drift Velocity v<sub>d</sub>', '#d97706'),
+            {
+              x: [state.mobility],
+              y: [state.driftVelocity],
+              type: 'scatter',
+              mode: 'markers',
+              name: 'Operating Point',
+              marker: { color: '#dc2626', size: 10, symbol: 'circle' },
+              hovertemplate: `Current μ: %{x:.3f}<br>Current v_d: %{y:.3e}<extra></extra>`,
+            },
+          ],
+          'Drift Velocity v<sub>d</sub> vs Mobility \u03bc',
+          'Mobility \u03bc (m\u00b2/V\u00b7s)',
+          'Drift Velocity v<sub>d</sub> (m/s)',
         )}
       </div>
 
