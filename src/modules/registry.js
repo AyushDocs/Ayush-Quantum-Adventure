@@ -22,6 +22,7 @@ import ramanConfig from './Raman_Viz/module.config';
 import aharonovBohmConfig from './AharonovBohm_Viz/module.config';
 import eprConfig from './EPR_Viz/module.config';
 import excitonConfig from './ExcitonLab/module.config';
+import hallLabConfig from './HallLabViz/module.config';
 
 export const learnModules = [
   // Fundamentals & Spectroscopy
@@ -58,5 +59,8 @@ export const learnModules = [
   // Exotic States & Lab
   skyrmionConfig,
   alterConfig,
-  thinFilmConfig
+  thinFilmConfig,
+
+  // Transport & Characterization
+  hallLabConfig
 ];
