@@ -1,69 +1,152 @@
 import { useMemo } from 'react';
+import Plot from 'react-plotly.js';
 
-export default function HallSpectroPlot({ landauLevels, fermiLevel, bField }) {
-    const width = 400;
+const C = {
+  bg: '#ffffff',
+  text: '#1a1a2e',
+  muted: '#555555',
+  border: '#ddd8ce',
+};
+
+export default function HallSpectroPlot({ landauLevels, fermiLevel }) {
     const height = 250;
-    
+
+    // Build the line data arrays
+    const { filledX, filledY, emptyX, emptyY } = useMemo(() => {
+        const filledX = [];
+        const filledY = [];
+        const emptyX = [];
+        const emptyY = [];
+
+        landauLevels.forEach((E) => {
+            const isFilled = E < fermiLevel;
+            if (isFilled) {
+                filledX.push(0, 1, null);
+                filledY.push(E, E, null);
+            } else {
+                emptyX.push(0, 1, null);
+                emptyY.push(E, E, null);
+            }
+        });
+
+        return { filledX, filledY, emptyX, emptyY };
+    }, [landauLevels, fermiLevel]);
+
+    const data = [
+        {
+            x: filledX,
+            y: filledY,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Filled Landau Levels',
+            line: { color: '#10b981', width: 2.5 }
+        },
+        {
+            x: emptyX,
+            y: emptyY,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Empty Landau Levels',
+            line: { color: '#3b82f6', width: 1.5, dash: 'dash' }
+        },
+        {
+            x: [0, 1],
+            y: [fermiLevel, fermiLevel],
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Fermi Level E<sub>F</sub>',
+            line: { color: '#f43f5e', width: 1.5, dash: 'dash' }
+        }
+    ];
+
+    // Broadening shapes around each Landau level
+    const shapes = useMemo(() => {
+        return landauLevels.map((E) => {
+            const isFilled = E < fermiLevel;
+            return {
+                type: 'rect',
+                x0: 0,
+                x1: 1,
+                y0: E - 0.2,
+                y1: E + 0.2,
+                fillcolor: isFilled ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.06)',
+                line: { width: 0 }
+            };
+        });
+    }, [landauLevels, fermiLevel]);
+
+    const layout = {
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        font: { color: C.muted, size: 10, family: 'sans-serif' },
+        margin: { l: 75, r: 20, t: 40, b: 50 },
+        height: height,
+        showlegend: true,
+        legend: {
+            orientation: 'h',
+            x: 0.5,
+            xanchor: 'center',
+            y: 1.25,
+            font: { size: 9, color: C.muted }
+        },
+        xaxis: {
+            title: { text: 'Density of States (DOS)', font: { size: 11, color: C.text, weight: 'bold' } },
+            gridcolor: 'rgba(0,0,0,0.06)',
+            zerolinecolor: 'rgba(0,0,0,0.06)',
+            color: C.muted,
+            linecolor: 'rgba(0,0,0,0.1)',
+            linewidth: 1,
+            range: [0, 1.0],
+            showticklabels: false
+        },
+        yaxis: {
+            title: { text: 'Energy (E)', font: { size: 11, color: C.text, weight: 'bold' } },
+            gridcolor: 'rgba(0,0,0,0.06)',
+            zerolinecolor: 'rgba(0,0,0,0.06)',
+            color: C.muted,
+            linecolor: 'rgba(0,0,0,0.1)',
+            linewidth: 1,
+            tickvals: landauLevels,
+            ticktext: landauLevels.map((E, n) => `n=${n} (${E.toFixed(2)})`),
+            range: [0, Math.max(2.5, ...landauLevels) + 0.3]
+        },
+        shapes: shapes,
+        annotations: [
+            {
+                x: 0.85,
+                y: fermiLevel,
+                text: `E<sub>F</sub>: ${fermiLevel.toFixed(2)}`,
+                showarrow: false,
+                font: { color: '#f43f5e', size: 9, weight: 'bold' },
+                bgcolor: '#ffffff',
+                bordercolor: '#ddd8ce',
+                borderwidth: 1,
+                borderpad: 4
+            }
+        ]
+    };
+
     return (
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
-            <h3 style={{ fontSize: '0.8rem', color: '#666', textTransform: 'uppercase', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-               Landau Level Spectroscopy
+        <div style={{ 
+            background: '#ffffff', 
+            padding: '24px', 
+            borderRadius: '24px', 
+            border: '1px solid #ddd8ce', 
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+            position: 'relative' 
+        }}>
+            <h3 style={{ fontSize: '0.85rem', color: '#1a1a2e', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '10px' }}>
+                Landau Level Spectroscopy
             </h3>
-            
-            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
-                {/* Axis */}
-                <line x1="40" y1={height - 40} x2={width - 20} y2={height - 40} stroke="#444" strokeWidth="1" />
-                <line x1="40" y1="20" x2="40" y2={height - 40} stroke="#444" strokeWidth="1" />
-                <text x="50" y="30" fill="#666" fontSize="10" transform="rotate(-90 40 40) translate(-50, -45)">ENERGY (E)</text>
-                <text x={width/2} y={height - 10} fill="#666" fontSize="10" textAnchor="middle">DENSITY OF STATES</text>
 
-                {/* Landau Levels */}
-                {landauLevels.map((E, n) => {
-                    const y = height - 40 - (E * 25);
-                    const isFilled = E < fermiLevel;
-                    
-                    return (
-                        <g key={n}>
-                            {/* Gaussian Broadening (Disorder) */}
-                            <rect 
-                                x="40" 
-                                y={y - 12} 
-                                width={width - 60} 
-                                height="24" 
-                                fill={isFilled ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.05)'} 
-                                rx="4"
-                            />
-                            {/* The Discrete Level */}
-                            <line 
-                                x1="40" 
-                                y1={y} 
-                                x2={width - 20} 
-                                y2={y} 
-                                stroke={isFilled ? '#10b981' : '#3b82f6'} 
-                                strokeWidth="2" 
-                                strokeDasharray={isFilled ? '0' : '4,2'}
-                            />
-                            <text x="15" y={y + 4} fill="#888" fontSize="10">n={n}</text>
-                        </g>
-                    );
-                })}
+            <Plot 
+                data={data}
+                layout={layout}
+                config={{ displayModeBar: false, responsive: true }}
+                style={{ width: '100%' }}
+            />
 
-                {/* Fermi Level (E_F) */}
-                <g style={{ transition: 'all 0.5s ease' }}>
-                    <line 
-                        x1="40" 
-                        y1={height - 40 - (fermiLevel * 25)} 
-                        x2={width - 20} 
-                        y2={height - 40 - (fermiLevel * 25)} 
-                        stroke="#f43f5e" 
-                        strokeWidth="1.5" 
-                        strokeDasharray="4,4"
-                    />
-                    <text x={width - 80} y={height - 40 - (fermiLevel * 25) - 8} fill="#f43f5e" fontSize="11" fontWeight="bold">FERMI LEVEL E_F</text>
-                </g>
-            </svg>
-
-            <div style={{ marginTop: '15px', fontSize: '0.75rem', color: '#666' }}>
+            <div style={{ marginTop: '15px', fontSize: '0.75rem', color: '#555555', lineHeight: '1.4' }}>
                 B-Field is forcing states into tight energy peaks. The <b>Hall Plateaus</b> happen when the Fermi Level is trapped in the gap between these levels.
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useWindowSize, getEffectiveWidth } from '../../hooks/useWindowSize';
 import { useZoomLevel } from '../../hooks/useZoomLevel';
 import HallControls from './Components/HallControls';
@@ -5,11 +6,23 @@ import HallEffectSim from './Components/HallEffectSim';
 import HallSpectroPlot from './Components/HallSpectroPlot';
 import HallPlateauPlot from './Components/HallPlateauPlot';
 import BerryMiniMap from './Components/BerryMiniMap';
+import LaughlinGauge from './Components/LaughlinGauge';
 import { useHallState } from './useHallState';
+
+const C = {
+  bg: '#f4f1ea',
+  text: '#1a1a2e',
+  muted: '#555555',
+  cardBg: '#ffffff',
+  border: '#ddd8ce',
+  accent: '#10b981',
+  sidebarBg: '#faf8f4',
+};
 
 export default function QuantumHallApp() {
     const { width } = useWindowSize();
     const state = useHallState();
+    const [resetTrigger, setResetTrigger] = useState(0);
     const effectiveWidth = getEffectiveWidth(width);
     const isMobile = effectiveWidth < 1024;
     const zoomLevel = useZoomLevel();
@@ -20,8 +33,8 @@ export default function QuantumHallApp() {
             display: 'flex', 
             flexDirection: isMobile ? 'column' : 'row', 
             overflow: 'hidden',
-            background: '#050505',
-            color: '#fff',
+            background: C.bg,
+            color: C.text,
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             width: `${100/scale}%`,
@@ -40,24 +53,24 @@ export default function QuantumHallApp() {
                 {/* Header Section */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <div>
-                        <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.5rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '10px' }}>
-                            TOPOLOGICAL <span style={{ color: '#10b981' }}>HALL BAR LAB</span>
+                        <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.5rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '10px', color: C.text }}>
+                            TOPOLOGICAL <span style={{ color: C.accent }}>HALL BAR LAB</span>
                         </h1>
-                        <p style={{ color: '#888', fontSize: '1rem', maxWidth: '800px', lineHeight: '1.6' }}>
+                        <p style={{ color: C.muted, fontSize: '1rem', maxWidth: '800px', lineHeight: '1.6' }}>
                            Experiment with 6-probe transport, Shubnikov-de Haas oscillations, and the topological protection of edge states in a 2D electron gas.
                         </p>
                     </div>
                     {/* Floating Mini-Map */}
-                    <BerryMiniMap fillingFactor={state.fillingFactor} />
+                    <BerryMiniMap fillingFactor={state.fillingFactor} bField={state.bField} />
                 </div>
 
                 {/* Top Row: Main Simulation (The Hall Bar) */}
                 <div style={{ 
-                    background: 'rgba(0,0,0,0.5)',
+                    background: C.cardBg,
                     borderRadius: '24px',
                     padding: '24px',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                    border: `1px solid ${C.border}`,
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
                     position: 'relative'
                 }}>
                     <HallEffectSim 
@@ -65,7 +78,10 @@ export default function QuantumHallApp() {
                         chernNumber={state.chernNumber}
                         disorderStrength={state.disorderStrength}
                         temperature={state.temperature}
-                        isFractional={state.isFractional}
+                        showEdgeStates={state.showEdgeStates}
+                        resetTrigger={resetTrigger}
+                        density={state.density}
+                        fillingFactor={state.fillingFactor}
                     />
                 </div>
 
@@ -87,19 +103,22 @@ export default function QuantumHallApp() {
                         temperature={state.temperature}
                     />
                 </div>
+
+                {/* Laughlin Gauge Explanation Section */}
+                <LaughlinGauge chernNumber={state.chernNumber} bField={state.bField} />
             </div>
 
             {/* Sidebar Controls */}
             <div className="custom-scrollbar" style={{ 
                 width: isMobile ? '100%' : (effectiveWidth < 1300 ? '300px' : '340px'),
-                background: '#0a0a0a', 
-                borderLeft: isMobile ? 'none' : '1px solid #1a1a1a', 
+                background: C.sidebarBg, 
+                borderLeft: isMobile ? 'none' : `1px solid ${C.border}`, 
                 padding: isMobile ? '20px' : (effectiveWidth < 1300 ? '24px' : '32px'),
                 overflowY: isMobile ? 'visible' : 'auto',
                 height: 'auto',
                 flexShrink: 0
             }}>
-                <HallControls state={state} />
+                <HallControls state={state} onReset={() => setResetTrigger(prev => prev + 1)} />
             </div>
         </div>
     );

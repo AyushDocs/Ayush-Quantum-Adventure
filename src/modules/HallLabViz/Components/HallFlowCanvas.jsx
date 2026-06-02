@@ -28,7 +28,7 @@ const C = {
 export default function HallFlowCanvas({
   carrierType, bField, bSign, current,
   showMagnetic, showElectric, animating,
-  thickness, area, carrierDensity,
+  _thickness, area, carrierDensity,
   mobility,
   hallAngle, omegaCtau, hallBalance = 1.0,
 }) {
@@ -112,13 +112,25 @@ export default function HallFlowCanvas({
       <rect x={barLeft} y={barTop} width={barRight - barLeft} height={barH}
         fill="url(#hallBarGradLight)" stroke={C.barStroke} strokeWidth={1} rx={4} />
 
+      {/* Left and Right Current Probes */}
+      <rect x={barLeft - 10} y={barTop} width={10} height={barH}
+        fill={C.yellow} opacity={0.35} rx={2} />
+      <text x={barLeft} y={barTop - 8} textAnchor="start" fill={C.yellow} fontSize={8} fontWeight="bold">Current Probe (I+)</text>
+
+      <rect x={barRight} y={barTop} width={10} height={barH}
+        fill={C.yellow} opacity={0.35} rx={2} />
+      <text x={barRight} y={barTop - 8} textAnchor="end" fill={C.yellow} fontSize={8} fontWeight="bold">Current Probe (I-)</text>
+
       {/* Hall voltage probes */}
       <rect x={barMidX - 8} y={barTop - 15} width={16} height={15}
-        fill={C.green} opacity={0.2} rx={2} />
+        fill={C.green} opacity={0.25} rx={2} />
       <text x={barMidX} y={barTop - 7} textAnchor="middle" alignmentBaseline="central" fill={C.green} fontSize={9} fontWeight="bold">+</text>
+      <text x={barMidX + 12} y={barTop - 8} textAnchor="start" fill={C.green} fontSize={8} fontWeight="bold">Voltage Probe (V+)</text>
+
       <rect x={barMidX - 8} y={barBottom} width={16} height={15}
-        fill={C.green} opacity={0.2} rx={2} />
+        fill={C.green} opacity={0.25} rx={2} />
       <text x={barMidX} y={barBottom + 8} textAnchor="middle" alignmentBaseline="central" fill={C.green} fontSize={9} fontWeight="bold">−</text>
+      <text x={barMidX + 12} y={barBottom + 8} textAnchor="start" fill={C.green} fontSize={8} fontWeight="bold">Voltage Probe (V-)</text>
 
       <text x={barMidX} y={barTop - 22} textAnchor="middle" fill={C.green} fontSize={10} fontWeight="bold">
         V<tspan baselineShift="sub" fontSize="6.5">H</tspan>

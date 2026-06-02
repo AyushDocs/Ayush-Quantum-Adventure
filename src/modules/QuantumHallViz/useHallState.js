@@ -6,33 +6,17 @@ export function useHallState() {
     const [disorderStrength, setDisorderStrength] = useState(0.2); 
     const [temperature, setTemperature] = useState(0.1); 
     const [showEdgeStates, setShowEdgeStates] = useState(true);
-    const [isFractional, setIsFractional] = useState(false);
 
     // nu = n * h / (e * B)
     const fillingFactor = useMemo(() => {
-        if (Math.abs(bField) < 0.1) return 10;
-        const rawNu = (density * 5.0) / bField;
-        
-        if (isFractional) {
-            // Snap to common fractions: 1/3, 2/5, 3/7, 2/3, etc.
-            const fractions = [1/3, 2/5, 3/7, 1/2, 2/3, 3/5, 1];
-            let closest = fractions[0];
-            let minDiff = Math.abs(rawNu - closest);
-            fractions.forEach(f => {
-                if (Math.abs(rawNu - f) < minDiff) {
-                    minDiff = Math.abs(rawNu - f);
-                    closest = f;
-                }
-            });
-            return minDiff < 0.15 ? closest : rawNu;
-        }
-        return rawNu;
-    }, [bField, density, isFractional]);
+        if (bField < 0.05) return 0;
+        return density / bField;
+    }, [bField, density]);
 
     const chernNumber = useMemo(() => {
-        if (isFractional) return fillingFactor.toFixed(2);
+        if (bField < 0.05) return 0;
         return Math.max(1, Math.floor(fillingFactor));
-    }, [fillingFactor, isFractional]);
+    }, [fillingFactor, bField]);
 
     // Rxx Peaks Logic: Peaks during transitions (when fillingFactor is near an integer + 0.5)
     // Rxx is zero on plateaus (near integer fillingFactor)
@@ -64,7 +48,6 @@ export function useHallState() {
         disorderStrength, setDisorderStrength,
         temperature, setTemperature,
         showEdgeStates, setShowEdgeStates,
-        isFractional, setIsFractional,
         fillingFactor, 
         chernNumber, 
         rxx,
