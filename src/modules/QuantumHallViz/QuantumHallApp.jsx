@@ -44,24 +44,27 @@ export default function QuantumHallApp() {
             <div className="custom-scrollbar" style={{ 
                 flex: 1, 
                 overflowY: isMobile ? 'visible' : 'auto',
-                padding: isMobile ? '20px' : '40px',
+                padding: isMobile ? '16px' : '20px 40px 30px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: isMobile ? '20px' : '40px',
+                gap: isMobile ? '16px' : '20px',
                 height: isMobile ? 'auto' : '100%'
             }}>
                 {/* Header Section */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                        <h1 style={{ fontSize: isMobile ? '1.5rem' : '2.5rem', fontWeight: '900', letterSpacing: '-1.5px', marginBottom: '10px', color: C.text }}>
-                            TOPOLOGICAL <span style={{ color: C.accent }}>HALL BAR LAB</span>
-                        </h1>
-                        <p style={{ color: C.muted, fontSize: '1rem', maxWidth: '800px', lineHeight: '1.6' }}>
-                           Experiment with 6-probe transport, Shubnikov-de Haas oscillations, and the topological protection of edge states in a 2D electron gas.
-                        </p>
-                    </div>
-                    {/* Floating Mini-Map */}
-                    <BerryMiniMap fillingFactor={state.fillingFactor} bField={state.bField} />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <h1 style={{ 
+                        fontSize: isMobile ? '1.5rem' : '2.5rem', 
+                        fontWeight: '900', 
+                        letterSpacing: '-1.5px', 
+                        marginTop: '0',
+                        marginBottom: '6px', 
+                        color: C.text 
+                    }}>
+                        TOPOLOGICAL <span style={{ color: C.accent }}>HALL BAR LAB</span>
+                    </h1>
+                    <p style={{ color: C.muted, fontSize: '0.95rem', maxWidth: '800px', lineHeight: '1.5', margin: '0' }}>
+                       Experiment with 6-probe transport, Shubnikov-de Haas oscillations, and the topological protection of edge states in a 2D electron gas.
+                    </p>
                 </div>
 
                 {/* Top Row: Main Simulation (The Hall Bar) */}
@@ -76,9 +79,7 @@ export default function QuantumHallApp() {
                     <HallEffectSim 
                         bField={state.bField} 
                         chernNumber={state.chernNumber}
-                        disorderStrength={state.disorderStrength}
                         temperature={state.temperature}
-                        showEdgeStates={state.showEdgeStates}
                         resetTrigger={resetTrigger}
                         density={state.density}
                         fillingFactor={state.fillingFactor}
@@ -104,8 +105,18 @@ export default function QuantumHallApp() {
                     />
                 </div>
 
-                {/* Laughlin Gauge Explanation Section */}
-                <LaughlinGauge chernNumber={state.chernNumber} bField={state.bField} />
+                {/* Bottom Section: Laughlin Pump & Momentum Winding */}
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: isMobile ? '1fr' : '1fr auto', 
+                    gap: '30px',
+                    alignItems: 'start'
+                }}>
+                    <LaughlinGauge chernNumber={state.chernNumber} bField={state.bField} />
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <BerryMiniMap fillingFactor={state.fillingFactor} bField={state.bField} />
+                    </div>
+                </div>
             </div>
 
             {/* Sidebar Controls */}

@@ -12,7 +12,6 @@ export default function HallControls({ state, onReset }) {
         bField, setBField, 
         density, setDensity, 
         temperature, setTemperature, 
-        showEdgeStates, setShowEdgeStates,
         chernNumber 
     } = state;
 
@@ -72,27 +71,6 @@ export default function HallControls({ state, onReset }) {
                     </div>
                 </div>
 
-                {/* Disorder Slider */}
-                <div>
-                    <label style={{ display: 'block', fontSize: '0.8rem', color: C.muted, marginBottom: '12px' }}>
-                        Disorder Strength (W)
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                        <input 
-                            type="range" 
-                            min="0" 
-                            max="1" 
-                            step="0.05" 
-                            value={state.disorderStrength} 
-                            onChange={(e) => state.setDisorderStrength(parseFloat(e.target.value))}
-                            style={{ flex: 1, accentColor: '#f43f5e' }}
-                        />
-                        <span style={{ minWidth: '45px', textAlign: 'right', fontWeight: 'bold', color: '#f43f5e', fontSize: '1rem' }}>
-                            {(state.disorderStrength * 100).toFixed(0)}%
-                        </span>
-                    </div>
-                </div>
-
                 {/* Temperature Slider */}
                 <div>
                     <label style={{ fontSize: '0.8rem', color: C.muted, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
@@ -115,19 +93,7 @@ export default function HallControls({ state, onReset }) {
                     </div>
                 </div>
 
-                {/* Edge State Toggle */}
-                <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '15px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', color: C.muted, cursor: 'pointer' }}>
-                        <input 
-                            type="checkbox" 
-                            checked={showEdgeStates} 
-                            onChange={(e) => setShowEdgeStates(e.target.checked)}
-                            style={{ width: '16px', height: '16px', accentColor: '#10b981' }}
-                        />
-                        Highlight Edge Percolation
-                    </label>
 
-                </div>
             </div>
 
             {/* Results Card */}
@@ -187,6 +153,22 @@ export default function HallControls({ state, onReset }) {
                 <p style={{ fontSize: '0.8rem', color: C.muted, lineHeight: '1.5', marginTop: '10px' }}>
                     As you increase the <b>Magnetic Field (B)</b>, the energy spacing ΔE between Landau Levels increases, compressing electrons into fewer, highly degenerate states.
                 </p>
+
+                {/* SdH Explanation Card */}
+                <div style={{ 
+                    background: 'rgba(59, 130, 246, 0.05)', 
+                    border: '1px solid rgba(59, 130, 246, 0.15)', 
+                    borderRadius: '12px', 
+                    padding: '12px 14px', 
+                    marginTop: '5px' 
+                }}>
+                    <div style={{ fontSize: '0.72rem', color: '#3b82f6', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', textTransform: 'uppercase' }}>
+                        <Activity size={12} /> SdH Oscillations
+                    </div>
+                    <p style={{ fontSize: '0.75rem', color: C.muted, lineHeight: '1.45', margin: 0 }}>
+                        The spikes in longitudinal resistance (<b>R<sub>xx</sub></b>) are <b>Shubnikov-de Haas (SdH) oscillations</b>. They occur at the "jump" regions between Hall plateaus when a Landau Level crosses the Fermi energy, creating a brief window for electrons to scatter.
+                    </p>
+                </div>
             </div>
         </div>
     );

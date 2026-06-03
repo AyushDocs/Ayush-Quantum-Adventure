@@ -3,9 +3,7 @@ import { useState, useMemo } from 'react';
 export function useHallState() {
     const [bField, setBField] = useState(1.5); 
     const [density, setDensity] = useState(2.0); 
-    const [disorderStrength, setDisorderStrength] = useState(0.2); 
     const [temperature, setTemperature] = useState(0.1); 
-    const [showEdgeStates, setShowEdgeStates] = useState(true);
 
     // nu = n * h / (e * B)
     const fillingFactor = useMemo(() => {
@@ -45,9 +43,7 @@ export function useHallState() {
     return {
         bField, setBField,
         density, setDensity,
-        disorderStrength, setDisorderStrength,
         temperature, setTemperature,
-        showEdgeStates, setShowEdgeStates,
         fillingFactor, 
         chernNumber, 
         rxx,

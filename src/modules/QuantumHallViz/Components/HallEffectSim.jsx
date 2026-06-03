@@ -1,18 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Zap, RotateCcw, MousePointer2, Play, Pause, Info } from 'lucide-react';
 
-const LANDSCAPE_RES = 30;
-const generateLandscape = () => {
-    const grid = [];
-    for (let x = 0; x <= LANDSCAPE_RES; x++) {
-        grid[x] = [];
-        for (let y = 0; y <= LANDSCAPE_RES / 2; y++) {
-            grid[x][y] = (Math.random() - 0.5) * 1.5;
-        }
-    }
-    return grid;
-};
-const STATIC_LANDSCAPE = generateLandscape();
+// Landscape generation removed since disorder strength was removed
 
 const WAYPOINTS = [
     { x: 58, y: 103 },
@@ -84,7 +73,7 @@ const getPathState = (s) => {
     return { x_path, y_path, vx, vy, bounce };
 };
 
-const generateInitialParticles = (bField, showEdgeStates) => {
+const generateInitialParticles = (bField) => {
     const isZeroB = bField < 0.05;
     const effectiveB = Math.max(0.2, bField * 0.45);
     const driftV = 0.07 / effectiveB;
@@ -92,7 +81,7 @@ const generateInitialParticles = (bField, showEdgeStates) => {
     return [...Array(24)].map((_, i) => {
         const isEdge = i < 16; // 16 edge particles, 8 bulk particles
         
-        if (showEdgeStates && !isZeroB) {
+        if (!isZeroB) {
             if (isEdge) {
                 // Edge particle: even spacing along the closed loop
                 const s = (i / 16) * totalLength;
@@ -413,9 +402,7 @@ function LandauDiagram({ bField, fillingFactor, isZeroB }) {
 export default function HallEffectSim({ 
     bField, 
     chernNumber, 
-    disorderStrength, 
     temperature = 0.1, 
-    showEdgeStates = true, 
     resetTrigger,
     density = 2.0,
     fillingFactor = 0.0
@@ -430,11 +417,11 @@ export default function HallEffectSim({
     const E_FIELD_X = 0.07; 
     const TAU = 12.0; 
 
-    const particles = useRef(generateInitialParticles(bField, showEdgeStates));
+    const particles = useRef(generateInitialParticles(bField));
 
     const initParticles = useCallback(() => {
-        particles.current = generateInitialParticles(bField, showEdgeStates);
-    }, [bField, showEdgeStates]);
+        particles.current = generateInitialParticles(bField);
+    }, [bField]);
 
     const resetLab = () => {
         setHallFieldY(0);
@@ -444,27 +431,14 @@ export default function HallEffectSim({
     useEffect(() => {
         if (resetTrigger > 0) {
             setHallFieldY(0);
-            particles.current = generateInitialParticles(bField, showEdgeStates);
+            particles.current = generateInitialParticles(bField);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetTrigger]);
 
-    useEffect(() => {
-        initParticles();
-    }, [showEdgeStates]);
 
-    const getPotentialForce = useCallback((px, py) => {
-        let fx = 0, fy = 0;
-        const gx = (px / 800) * LANDSCAPE_RES;
-        const gy = (py / 350) * (LANDSCAPE_RES / 2);
-        const ix = Math.floor(gx), iy = Math.floor(gy);
-        if (ix >= 0 && ix < LANDSCAPE_RES && iy >= 0 && iy < LANDSCAPE_RES / 2) {
-            const u00 = STATIC_LANDSCAPE[ix][iy], u10 = STATIC_LANDSCAPE[ix+1][iy], u01 = STATIC_LANDSCAPE[ix][iy+1];
-            fx -= (u10 - u00) * disorderStrength * 4.5;
-            fy -= (u01 - u00) * disorderStrength * 4.5;
-        }
-        return { fx, fy };
-    }, [disorderStrength]);
+
+    // Potential force calculation removed with disorderStrength
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -502,7 +476,7 @@ export default function HallEffectSim({
 
             particles.current.forEach((p) => {
                 if (isPlaying) {
-                    if (showEdgeStates && !isZeroB) {
+                    if (!isZeroB) {
                         if (p.isEdge) {
                             // Edge state: skipping orbits along boundary
                             const edgeSpeed = 0.8 + bField * 0.8;
@@ -528,9 +502,8 @@ export default function HallEffectSim({
                             p.y_path = p.y;
                         }
                     } else {
-                        const { fx, fy } = getPotentialForce(p.x, p.y);
-                        const ax = (EX - p.vy*B + fx + (Math.random()-0.5)*noise) - p.vx/TAU;
-                        const ay = (EY + p.vx*B + fy + (Math.random()-0.5)*noise) - p.vy/TAU;
+                        const ax = (EX - p.vy*B + (Math.random()-0.5)*noise) - p.vx/TAU;
+                        const ay = (EY + p.vx*B + (Math.random()-0.5)*noise) - p.vy/TAU;
                         p.vx += ax * dt; p.vy += ay * dt;
                         p.x += p.vx * dt; p.y += p.vy * dt;
 
@@ -587,7 +560,7 @@ export default function HallEffectSim({
         };
         draw();
         return () => cancelAnimationFrame(animationFrameId);
-    }, [isPlaying, bField, chernNumber, temperature, getPotentialForce, showEdgeStates]);
+    }, [isPlaying, bField, chernNumber, temperature]);
 
     return (
         <div style={{ position: 'relative', width: '100%', cursor: 'default' }}>

@@ -58,7 +58,7 @@ export default function BerryMiniMap({ fillingFactor, bField }) {
             </svg>
 
             <div style={{ fontSize: '0.65rem', color: '#555555', marginTop: '8px', lineHeight: '1.4' }}>
-                The <b>Chern Number</b> is the number of times this momentum-loop wraps around the red monopole. Each wrap adds a conductivity of <b>e²/h</b>.
+                The <b>Chern Number</b> is the number of times this momentum-loop wraps around the red monopole. Each wrap adds a conductivity of <b>e²/h</b>. <span style={{ opacity: 0.85, display: 'block', marginTop: '4px' }}><i>(Note: The wavy "flower" shape is illustrative; only the number of complete wraps around the center is physically meaningful.)</i></span>
             </div>
         </div>
     );
